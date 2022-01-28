@@ -137,6 +137,49 @@ public class LaunchInterceptorConditionCollectionTest {
         assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC1(points, radius));
     }
 
+    // Tests for LIC #2
+
+    @Test
+    public void givenThreeValidPointsAndValidDeviation_whenLIC2_thenTrue(){
+        List<Point> points = List.of(new Point(4, 0), new Point(0, 0), new Point(4, 3));
+        double epsilon = 2.0;
+
+        boolean result = launchInterceptorConditionCollection.LIC2(points,epsilon);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void givenNullPointsAndValidDeviation_whenLIC2_thenThrowIllegalArgumentException(){
+        double epsilon = 2;
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC2(null,epsilon));
+    }
+
+    @Test
+    public void givenInvalidAmountOfPointsAndValidDeviation_whenLIC2_thenThrowIllegalArgumentException(){
+        List<Point> points = List.of(new Point(4, 0), new Point(0, 0));
+        double epsilon = 2;
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC2(points,epsilon));
+    }
+
+    @Test
+    public void givenPointsThatCoincideAndValidDeviation_whenLIC2_thenThrowIllegalArgumentException(){
+        List<Point> points = List.of(new Point(4, 0), new Point(4, 0), new Point(4, 3));
+        double epsilon = 2;
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC2(points,epsilon));
+    }
+
+    @Test
+    public void givenThreeValidPointsAndUnvalidDeviation_whenLIC2_thenThrowIllegalArgumentException(){
+        List<Point> points = List.of(new Point(4, 0), new Point(0, 0), new Point(4, 3));
+        double epsilon = 90.0;
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC2(points,epsilon));
+    }
+
     // Tests for LIC #3
 
     @Test
