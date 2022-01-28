@@ -23,7 +23,7 @@ public class LaunchInterceptorConditionCollection {
             throw new IllegalArgumentException("There has to be at least two points, size of given points="
                     + points.size());
         }
-        if (length1 < 0) {
+        if (doubleCompare(length1, 0) < 0) {
             throw new IllegalArgumentException("Length cannot be less than zero");
         }
         for (int i = 0; i < points.size() - 1; i++) {
@@ -54,7 +54,7 @@ public class LaunchInterceptorConditionCollection {
             throw new IllegalArgumentException("There has to be at least three points, size of given points="
                     + points.size());
         }
-        if (radius1 < 0) {
+        if (doubleCompare(radius1, 0) < 0) {
             throw new IllegalArgumentException("Radius cannot be less than zero");
         }
         for (int i = 0; i < points.size() - 2; i++) {
@@ -86,7 +86,7 @@ public class LaunchInterceptorConditionCollection {
             throw new IllegalArgumentException("There has to be at least three points, size of given points="
                     + points.size());
         }
-        if (area1 < 0) {
+        if (doubleCompare(area1, 0) < 0) {
             throw new IllegalArgumentException("Area cannot be less than zero");
         }
         for (int i = 0; i < points.size() - 2; i++) {
@@ -124,7 +124,7 @@ public class LaunchInterceptorConditionCollection {
         if (kPts < 1 || kPts > points.size() - 2) {
             throw new IllegalArgumentException("kPts has to be within 1 and points.size() - 2 inclusive");
         }
-        if (length1 < 0) {
+        if (doubleCompare(length1, 0) < 0) {
             throw new IllegalArgumentException("Length cannot be less than zero");
         }
         for (int i = 0; i < points.size() - kPts - 1; i++) {
