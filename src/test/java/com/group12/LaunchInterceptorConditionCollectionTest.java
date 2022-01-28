@@ -149,6 +149,17 @@ public class LaunchInterceptorConditionCollectionTest {
         assertTrue(result);
     }
 
+
+    @Test
+    public void givenTwoSetsOfPointsWithFirstSetInvalidAndValidDeviation_when_LIC2_thenTrue(){
+        List<Point> points = List.of(new Point(4, 0), new Point(4, 0), new Point(4, 3), new Point(4, 0), new Point(0, 0), new Point(4, 3));
+        double epsilon = 2.0;
+
+        boolean result = launchInterceptorConditionCollection.LIC2(points,epsilon);
+
+        assertTrue(result);
+    }
+
     @Test
     public void givenNullPointsAndValidDeviation_whenLIC2_thenThrowIllegalArgumentException(){
         double epsilon = 2;
@@ -165,11 +176,11 @@ public class LaunchInterceptorConditionCollectionTest {
     }
 
     @Test
-    public void givenPointsThatCoincideAndValidDeviation_whenLIC2_thenThrowIllegalArgumentException(){
+    public void givenPointsThatCoincideAndValidDeviation_whenLIC2_thenFalse(){
         List<Point> points = List.of(new Point(4, 0), new Point(4, 0), new Point(4, 3));
         double epsilon = 2;
-
-        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC2(points,epsilon));
+        boolean result = launchInterceptorConditionCollection.LIC2(points,epsilon);
+        assertFalse(result);
     }
 
     @Test

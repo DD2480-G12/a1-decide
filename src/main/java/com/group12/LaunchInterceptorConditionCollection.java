@@ -84,21 +84,24 @@ public class LaunchInterceptorConditionCollection {
         if (points == null) {
             throw new IllegalArgumentException("Points list cannot be null");
         }
-        if (points.size() != 3) {
-            throw new IllegalArgumentException("There has to be three points");        
-        }
-        if((points.get(0).getX() == points.get(1).getX()) && (points.get(0).getY() == points.get(1).getY()) || 
-            ((points.get(2).getX() == points.get(1).getX()) && (points.get(2).getY() == points.get(1).getY()))
-        ){
-            throw new IllegalArgumentException("No point may coincide with the vertex point");
+        if (points.size() < 3) {
+            throw new IllegalArgumentException("There has to be atleast three points");        
         }
         if(doubleCompare(epsilon, 0) == -1 || doubleCompare(epsilon,PI) >= 0){
             throw new IllegalArgumentException("Epsilon must hold these conditions: 0 <= Epsilon < Pi");
         }
-        double angle = angleFromThreePoints(points.get(1), points.get(0), points.get(2));
-        if(doubleCompare(angle, PI - epsilon) == -1 || doubleCompare(angle, PI - epsilon) == 1 ){
-            return true;
+        for( int i = 0; i<points.size() -2; i += 3){
+            if((points.get(i).getX() == points.get(i+1).getX()) && (points.get(i).getY() == points.get(i+1).getY()) || 
+            ((points.get(i+2).getX() == points.get(i+1).getX()) && (points.get(i+2).getY() == points.get(i+1).getY()))
+            ){
+                continue;
+            }
+            double angle = angleFromThreePoints(points.get(i+1), points.get(i), points.get(i+2));
+            if(doubleCompare(angle, PI - epsilon) == -1 || doubleCompare(angle, PI - epsilon) == 1 ){
+                return true;
+            }
         }
+        
         return false;
     }
 
