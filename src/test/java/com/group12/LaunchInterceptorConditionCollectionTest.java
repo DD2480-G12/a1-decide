@@ -17,6 +17,8 @@ public class LaunchInterceptorConditionCollectionTest {
         launchInterceptorConditionCollection = new LaunchInterceptorConditionCollection();
     }
 
+    // Tests for LIC #0
+
     @Test
     public void givenTwoPointsWithDistanceGreaterThan2AndLengthIs2_whenLIC0_thenTrue() {
         List<Point> points = List.of(new Point(2, 2), new Point(4, 1.99));
@@ -68,6 +70,71 @@ public class LaunchInterceptorConditionCollectionTest {
         double length = 2;
 
         assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC0(points, length));
+    }
+
+    // Tests for LIC #1
+
+    @Test
+    public void givenThreePointsWithRadiusGreaterThan1AndRadiusIs1_whenLIC1_thenTrue() {
+        List<Point> points = List.of(new Point(-1, 0), new Point(0, 1.1), new Point(1, 0));
+        double radius = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC1(points, radius);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void givenThreePointsWithRadiusEqualTo1AndRadiusIs1_whenLIC1_thenFalse() {
+        List<Point> points = List.of(new Point(-1, 0), new Point(0, 1), new Point(1, 0));
+        double radius = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC1(points, radius);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void givenThreePointsWithRadiusLessThan1AndRadiusIs1_whenLIC1_thenFalse() {
+        List<Point> points = List.of(new Point(-1, 0), new Point(0, 1), new Point(0.9, 0));
+        double radius = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC1(points, radius);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void givenThreeLinearPointsWithRadiusGreaterThan1AndRadiusIs1_whenLIC1_thenTrue() {
+        List<Point> points = List.of(new Point(-1, 0), new Point(0, 0), new Point(1.1, 0));
+        double radius = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC1(points, radius);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void givenRadiusIsLessThan0_whenLIC1_thenThrowIllegalArgumentException() {
+        List<Point> points = List.of(new Point(-1, 0), new Point(0, 1), new Point(1, 0));
+        double radius = -0.01;
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC1(points, radius));
+    }
+
+    @Test
+    public void givenPointsIsNull_whenLIC1_thenThrowIllegalArgumentException() {
+        double radius = 1;
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC1(null, radius));
+    }
+
+    @Test
+    public void givenTwoPoint_whenLIC1_thenThrowIllegalArgumentException() {
+        List<Point> points = List.of(new Point(2, 2), new Point(1, 1));
+        double radius = 1;
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC1(points, radius));
     }
 
     // Tests for LIC #7
