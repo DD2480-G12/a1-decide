@@ -69,6 +69,38 @@ public class LaunchInterceptorConditionCollection {
     }
 
     /**
+     * LIC #3 checks if there exists at least one set of three consecutive data points that are the vertices of a triangle
+     * with an area greater than <b>area1</b>.
+     *
+     * @param points list of radar echos ({@link Point})
+     * @param area1 has to be greater than or equal to 0 (zero)
+     * @return true if at least one set of three consecutive data points forms a triangle with an area greater than
+     * given <b>area1</b>, false otherwise.
+     * @throws IllegalArgumentException is thrown if <b>area1</b> is less than 0 (zero)
+     */
+    public boolean LIC3(List<Point> points, double area1) throws IllegalArgumentException {
+        if (points == null) {
+            throw new IllegalArgumentException("Points list cannot be null");
+        }
+        if (points.size() < 3) {
+            throw new IllegalArgumentException("There has to be at least three points, size of given points="
+                    + points.size());
+        }
+        if (area1 < 0) {
+            throw new IllegalArgumentException("Area cannot be less than zero");
+        }
+        for (int i = 0; i < points.size() - 2; i++) {
+            Point point1 = points.get(i);
+            Point point2 = points.get(i + 1);
+            Point point3 = points.get(i + 2);
+            if (doubleCompare(areaOfTriangle(point1, point2, point3), area1) == 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * LIC #7 checks if at least one set of two data points separated by exactly <b>kPts</b> consecutive intervening
      * points that are a distance greater than <b>length1</b> apart. The condition is not met when <b>points</b> has
      * less than three elements.
@@ -148,5 +180,15 @@ public class LaunchInterceptorConditionCollection {
         double circleX = (c * e - f * b) / g;
         double circleY = (a * f - d * c) / g;
         return distance(point1, new Point(circleX, circleY));
+    }
+
+    private double areaOfTriangle(Point point1, Point point2, Point point3) {
+        double x1 = point1.getX();
+        double y1 = point1.getY();
+        double x2 = point2.getX();
+        double y2 = point2.getY();
+        double x3 = point3.getX();
+        double y3 = point3.getY();
+        return Math.abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2;
     }
 }
