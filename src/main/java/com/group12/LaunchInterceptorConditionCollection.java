@@ -6,6 +6,8 @@ import java.util.List;
 
 public class LaunchInterceptorConditionCollection {
 
+    private static final double PI = 3.1415926535;
+
     /**
      * LIC #0 checks if there exists at least one set of two consecutive data points that are a distance greater than
      * the given <b>length1</b>.
@@ -67,6 +69,39 @@ public class LaunchInterceptorConditionCollection {
         }
         return false;
     }
+
+    /**
+    * LIC #2 checks if the given angle which is constructed from the 3 given data points is not in the range of Pi's deviations (exclusive).
+    *
+    * @param points list of radar echods ({@link Point})
+    * @param epsilon the deviation from Pi
+    * @return true if the angle is smaller than Pi - <b>epsilon</b> or greater than Pi + <b>epsilon</b>
+    * @throws IllegalArgumentException is thrown if <b>points</b> is null, <b>points</b> does not contain 3 elements, 
+    *                                  if the first or last element of <b>points</b> coincides with the second element of <b>points</b>,
+    *                                  if 0 <= <b>epsilon</b> < Pi does not hold.
+    */
+    public boolean LIC2(List<Point> points, double epsilon) throws IllegalArgumentException{
+        if (points == null) {
+            throw new IllegalArgumentException("Points list cannot be null");
+        }
+        if (points.size() != 3) {
+            throw new IllegalArgumentException("There has to be three points");        
+        }
+        if((points.get(0).getX() == points.get(1).getX()) && (points.get(0).getY() == points.get(1).getY()) || 
+            ((points.get(2).getX() == points.get(1).getX()) && (points.get(2).getY() == points.get(1).getY()))
+        ){
+            throw new IllegalArgumentException("No point may coincide with the vertex point");
+        }
+        if(doubleCompare(epsilon, 0) == -1 || doubleCompare(epsilon,PI) >= 0){
+            throw new IllegalArgumentException("Epsilon must hold these conditions: 0 <= Epsilon < Pi");
+        }
+        double angle = angleFromThreePoints(points.get(1), points.get(0), points.get(2));
+        if(doubleCompare(angle, PI - epsilon) == -1 || doubleCompare(angle, PI - epsilon) == 1 ){
+            return true;
+        }
+        return false;
+    }
+
 
     /**
      * LIC #3 checks if there exists at least one set of three consecutive data points that are the vertices of a triangle
@@ -190,5 +225,15 @@ public class LaunchInterceptorConditionCollection {
         double x3 = point3.getX();
         double y3 = point3.getY();
         return Math.abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2;
+    }
+
+    private double angleFromThreePoints(Point vertex, Point point1, Point point2){
+        double ax = vertex.getX() - point1.getX();
+        double ay = vertex.getY() - point1.getY();
+        double bx = vertex.getX() - point2.getX();
+        double by = vertex.getY() - point2.getY();
+        double maga = Math.sqrt(Math.pow(ax,2) + Math.pow(ay,2));
+        double magb = Math.sqrt(Math.pow(bx,2) + Math.pow(by,2));
+        return Math.acos((ax*bx + ay*by)/(maga*magb));
     }
 }
