@@ -29,7 +29,7 @@ public class LaunchInterceptorConditionCollection {
         for (int i = 0; i < points.size() - 1; i++) {
             Point point1 = points.get(i);
             Point point2 = points.get(i + 1);
-            if (distance(point1, point2) > length1) {
+            if (doubleCompare(distance(point1, point2), length1) == 1) {
                 return true;
             }
         }
@@ -61,7 +61,7 @@ public class LaunchInterceptorConditionCollection {
             Point point1 = points.get(i);
             Point point2 = points.get(i + 1);
             Point point3 = points.get(i + 2);
-            if (radiusOfSmallestCircle(point1, point2, point3) > radius1) {
+            if (doubleCompare(radiusOfSmallestCircle(point1, point2, point3), radius1) == 1) {
                 return true;
             }
         }
@@ -130,7 +130,7 @@ public class LaunchInterceptorConditionCollection {
         for (int i = 0; i < points.size() - kPts - 1; i++) {
             Point point1 = points.get(i);
             Point point2 = points.get(i + kPts + 1);
-            if (distance(point1, point2) > length1) {
+            if (doubleCompare(distance(point1, point2), length1) == 1) {
                 return true;
             }
         }
