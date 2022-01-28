@@ -137,6 +137,61 @@ public class LaunchInterceptorConditionCollectionTest {
         assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC1(points, radius));
     }
 
+    // Tests for LIC #3
+
+    @Test
+    public void givenThreePointsWithAreaGreaterThan1AndAreaIs1_whenLIC3_thenTrue() {
+        List<Point> points = List.of(new Point(0, 0), new Point(0, 2), new Point(2, 0));
+        double area = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC3(points, area);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void givenThreePointsWithAreaEqualTo1AndAreaIs1_whenLIC3_thenFalse() {
+        List<Point> points = List.of(new Point(0, 0), new Point(1, 1), new Point(2, 0));
+        double area = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC3(points, area);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void givenThreePointsWithAreaLessThan1AndAreaIs1_whenLIC3_thenFalse() {
+        List<Point> points = List.of(new Point(0, 0), new Point(1, 1), new Point(1, 0));
+        double area = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC3(points, area);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void givenAreaIsLessThan0_whenLIC3_thenThrowIllegalArgumentException() {
+        List<Point> points = List.of(new Point(0, 0), new Point(0, 2), new Point(2, 0));
+        double area = -0.01;
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC3(points, area));
+    }
+
+    @Test
+    public void givenPointsIsNull_whenLIC3_thenThrowIllegalArgumentException() {
+        double area = 1;
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC3(null, area));
+    }
+
+    @Test
+    public void givenTwoPoints_whenLIC3_thenThrowIllegalArgumentException() {
+        List<Point> points = List.of(new Point(0, 0), new Point(0, 2));
+        double area = 1;
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC3(points, area));
+    }
+
     // Tests for LIC #7
 
     @Test
