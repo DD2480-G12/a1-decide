@@ -138,6 +138,44 @@ public class LaunchInterceptorConditionCollection {
     }
 
     /**
+     * LIC #8 checks if there exists at least one set of three data points separated by exactly <b>aPts</b>
+     * and <b>bPts</b> consecutive intervening points respectively that cannot all be contained within or on a circle
+     * of the given <b>radius1</b> (RADIUS1). The condition is not met when less than 5 points are provided.
+     *
+     * @param points  list of radar echos ({@link Point})
+     * @param aPts    number of consecutive intervening points between 1st and 2nd points (greater than 0).
+     * @param bPts    number of consecutive intervening points between 2nd and 3rd points (greater than 0).
+     * @param radius1 has to be greater than 0 (zero)
+     * @return true if at least one set of three data points separated by <b>aPts</b> and <b>bPts</b> points forms a
+     * circle with radius greater than given <b>radius1</b>, false otherwise.
+     * Also return false when less than 5 points are provided.
+     * @throws IllegalArgumentException is thrown if <b>radius</b> is less than 0 (zero)
+     */
+    public boolean LIC8(List<Point> points, int aPts, int bPts, double radius1) throws IllegalArgumentException {
+        if (points == null) {
+            throw new IllegalArgumentException("Points list cannot be null");
+        }
+        if (points.size() < 5) {
+            return false;
+        }
+        if (aPts < 1 || bPts < 1 || aPts + bPts > points.size() - 3) {
+            throw new IllegalArgumentException("Invalid aPts or bPts: must be greater than 0 and form at least 1 separation");
+        }
+        if (doubleCompare(radius1, 0) < 0) {
+            throw new IllegalArgumentException("Radius cannot be less than zero");
+        }
+        for (int i = 0; i < points.size() - 2 - aPts - bPts; i++) {
+            Point point1 = points.get(i);
+            Point point2 = points.get(i + aPts + 1);
+            Point point3 = points.get(i + aPts + bPts + 2);
+            if (doubleCompare(radiusOfSmallestCircle(point1, point2, point3), radius1) == 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * LIC #12 checks if at least one set of two data points, separated by exatcly <b>kPts</b> consecutive intervening
      * points, which are a distance greater than the length <b>length1</b> apart. In addition, there exists at least
      * one set of two data points (which can be the same or different from thw two data points just mentioned),
