@@ -267,4 +267,76 @@ public class LaunchInterceptorConditionCollectionTest {
         assertThrows(IllegalArgumentException.class,
                 () -> launchInterceptorConditionCollection.LIC7(points, kPts, length1));
     }
+
+    // Tests for LIC 12
+
+    @Test
+    public void givenThreePointsWithDistanceGreaterThan2AndLessThan1AndKPtsIs1AndLength1Is1p9AnsLength2Is2p1_whenLIC12_thenTrue() {
+        List<Point> points = List.of(new Point(0, 0), new Point(1, 0), new Point(2, 0));
+        int kPts = 1;
+        double length1 = 1.9;
+        double length2 = 2.1;
+
+        boolean result = launchInterceptorConditionCollection.LIC12(points, kPts, length1, length2);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void givenThreePointsWithDistanceGreaterThan2AndLessThan1AndKPtsIs1AndLength1Is2AnsLength2Is2p1_whenLIC12_thenFalse() {
+        List<Point> points = List.of(new Point(0, 0), new Point(1, 0), new Point(2, 0));
+        int kPts = 1;
+        double length1 = 2;
+        double length2 = 2.1;
+
+        boolean result = launchInterceptorConditionCollection.LIC12(points, kPts, length1, length2);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void givenThreePointsWithDistanceGreaterThan2AndLessThan1AndKPtsIs1AndLength1Is2p1AnsLength2Is1p9_whenLIC12_thenFalse() {
+        List<Point> points = List.of(new Point(0, 0), new Point(1, 0), new Point(2, 0));
+        int kPts = 1;
+        double length1 = 2.1;
+        double length2 = 1.9;
+
+        boolean result = launchInterceptorConditionCollection.LIC12(points, kPts, length1, length2);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void givenTwoPoints_whenLIC12_thenFalse() {
+        List<Point> points = List.of(new Point(0, 0), new Point(2, 0));
+        int kPts = 1;
+        double length1 = 1.9;
+        double length2 = 2.1;
+
+        boolean result = launchInterceptorConditionCollection.LIC12(points, kPts, length1, length2);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void givenThreePointsAndKPtsIs0_whenLIC12_thenThrowIllegalArgumentException() {
+        List<Point> points = List.of(new Point(0, 0), new Point(1, 0), new Point(2, 0));
+        int kPts = 0;
+        double length1 = 1.9;
+        double length2 = 2.1;
+
+        assertThrows(IllegalArgumentException.class,
+                () -> launchInterceptorConditionCollection.LIC12(points, kPts, length1, length2));
+    }
+
+    @Test
+    public void givenThreePointsAndKPtsIs2_whenLIC12_thenThrowIllegalArgumentException() {
+        List<Point> points = List.of(new Point(0, 0), new Point(1, 0), new Point(2, 0));
+        int kPts = 0;
+        double length1 = 1.9;
+        double length2 = 2.1;
+
+        assertThrows(IllegalArgumentException.class,
+                () -> launchInterceptorConditionCollection.LIC12(points, kPts, length1, length2));
+    }
 }
