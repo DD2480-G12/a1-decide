@@ -176,6 +176,48 @@ public class LaunchInterceptorConditionCollection {
     }
 
     /**
+     * LIC #10 checks if there exists at least one set of three data points separated by exactly <b>ePts</b> and <b>fPts</b>
+     * consecutive intervening points, respectively, that are the vertices of a triangle with area greater
+     * than area1. The condition is not met when <b>points</b> has less than 5 elements.
+     *
+     * @param points list of radar echos ({@link Point})
+     * @param ePts first consecutive intervening points
+     * @param fPts second consecutive intervening points
+     * @param area1 the area of the triangle
+     * @return true if at least one set of three data points separated by exactly <b>ePts</b> and <b>fPts</b>
+     * consecutive intervening points, respectively forms a triangle with an area greater than <b>area1</b>, false otherwise.
+     * @throws IllegalArgumentException is thrown if <b>points</b> is null,
+     *                                  if <b>ePts</b> or <b>fPts</b> is less than 1, or if the length
+     *                                  of <b>points</b> - 3 is less than <b>ePts</b> + <b>fPts</b>.
+     */
+    public boolean LIC10(List<Point> points, int ePts, int fPts, double area1) throws IllegalArgumentException {
+        if (points == null) {
+            throw new IllegalArgumentException("Points list cannot be null");
+        }
+        if (points.size() < 5) {
+            return false;
+        }
+        if (ePts < 1 || fPts < 1) {
+            throw new IllegalArgumentException("ePts and fPts must both be 1 or larger");
+        }
+        if (points.size() - 3 < ePts + fPts) {
+            throw new IllegalArgumentException("The size of points - 3 must be more or equal to ePts + fPts");
+        }
+        if (doubleCompare(area1, 0) == -1) {
+            throw new IllegalArgumentException("area1 cannot be less than zero");
+        }
+        for (int i = 0; i < points.size() - ePts - fPts - 2; i++) {
+            Point point1 = points.get(i);
+            Point point2 = points.get(i + 1 + ePts);
+            Point point3 = points.get(i + 2 + ePts + fPts);
+            if (doubleCompare(areaOfTriangle(point1, point2, point3), area1) == 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * LIC #12 checks if at least one set of two data points, separated by exatcly <b>kPts</b> consecutive intervening
      * points, which are a distance greater than the length <b>length1</b> apart. In addition, there exists at least
      * one set of two data points (which can be the same or different from thw two data points just mentioned),

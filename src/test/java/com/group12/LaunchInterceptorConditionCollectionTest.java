@@ -411,6 +411,102 @@ public class LaunchInterceptorConditionCollectionTest {
                 () -> launchInterceptorConditionCollection.LIC8(points, aPts, bPts, radius));
     }
 
+    // Tests for LIC #10
+
+    @Test
+    public void givenThreePointsWithAreaGreaterThan1AndAreaIs1AndEPtsEqFPtsEq1_whenLIC10_thenTrue() {
+        List<Point> points = List.of(new Point(0, 0), new Point(0, 0), new Point(0, 2),
+                new Point(0, 0), new Point(2, 0));
+        int ePts = 1;
+        int fPts = 1;
+        double area = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC10(points, ePts, fPts, area);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void givenThreePointsWithAreaEqualTo1AndAreaIs1AndEPtsEqFPtsEq1_whenLIC10_thenFalse() {
+        List<Point> points = List.of(new Point(0, 0), new Point(0, 0), new Point(1, 1),
+                new Point(0, 0), new Point(2, 0));
+        int ePts = 1;
+        int fPts = 1;
+        double area = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC10(points, ePts, fPts, area);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void givenThreePointsWithAreaLessThan1AndAreaIs1AndEPtsEqFPtsEq1_whenLIC10_thenFalse() {
+        List<Point> points = List.of(new Point(0, 0), new Point(0, 0), new Point(1, 1),
+                new Point(0, 0), new Point(1, 0));
+        int ePts = 1;
+        int fPts = 1;
+        double area = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC10(points, ePts, fPts, area);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void lenOfPointsLessThan5_whenLIC10_thenFalse() {
+        List<Point> points = List.of(new Point(0, 0), new Point(0, 0), new Point(1, 1), new Point(0, 0));
+        int ePts = 1;
+        int fPts = 1;
+        double area = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC10(points, ePts, fPts, area);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void givenAreaLessThan0_whenLIC10_thenThrowIllegalArgumentException() {
+        List<Point> points = List.of(new Point(0, 0), new Point(0, 0), new Point(0, 2),
+                new Point(0, 0), new Point(2, 0));
+        int ePts = 1;
+        int fPts = 1;
+        double area = -0.1;
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC10(points, ePts, fPts, area));
+    }
+
+    @Test
+    public void givenPointsIsNull_whenLIC10_thenThrowIllegalArgumentException() {
+        int ePts = 1;
+        int fPts = 1;
+        double area = 1;
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC10(null, ePts, fPts, area));
+    }
+
+    @Test
+    public void ePtsLessThan1_whenLIC10_thenThrowIllegalArgumentException() {
+        List<Point> points = List.of(new Point(0, 0), new Point(0, 2), new Point(2, 0),
+                new Point(2, 0), new Point(2, 0));
+        int ePts = 0;
+        int fPts = 1;
+        double area = 1;
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC10(points, ePts, fPts, area));
+    }
+
+    @Test
+    public void lenOfPointsMinus3LessThanEPtsPlusFPts_whenLIC10_thenThrowIllegalArgumentException() {
+        List<Point> points = List.of(new Point(0, 0), new Point(0, 2), new Point(0, 2),
+                                     new Point(0, 2), new Point(0, 2));
+        
+        int ePts = 10;
+        int fPts = 10;
+        double area = 1;
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC10(points, ePts, fPts, area));
+    }
+
     // Tests for LIC 12
 
     @Test
