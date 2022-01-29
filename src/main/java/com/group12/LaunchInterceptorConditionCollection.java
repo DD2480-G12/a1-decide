@@ -137,6 +137,64 @@ public class LaunchInterceptorConditionCollection {
         return false;
     }
 
+    /**
+     * LIC #12 checks if at least one set of two data points, separated by exatcly <b>kPts</b> consecutive intervening
+     * points, which are a distance greater than the length <b>length1</b> apart. In addition, there exists at least
+     * one set of two data points (which can be the same or different from thw two data points just mentioned),
+     * separated by exactly <b>kPts</b> consecutive intervening points, that are a distance less than the length
+     * <b>length2</b> apart.
+     *
+     * @param points  points list of radar echos ({@link Point})
+     * @param kPts    number of consecutive intervening radar echos
+     * @param length1 has to be greater than 0 (zero)
+     * @param length2 has to be freater tan 0 (zero)
+     * @return true if the above conditions are met. false otherwise or if there are less than three points.
+     * @throws IllegalArgumentException <ul>
+     *     <li>
+     *         if <b>points</b> is null.
+     *     </li>
+     *     <li>
+     *         if <b>kPts</b> less than 1 or greater than the number of points minus 2.
+     *     </li>
+     *     <li>
+     *         if <b>length1</b> or <b>length2</b> is negative.
+     *     </li>
+     * </ul>
+     */
+    public boolean LIC12(List<Point> points, int kPts, double length1, double length2) throws IllegalArgumentException {
+        if (points == null) {
+            throw new IllegalArgumentException("Points list cannot be null");
+        }
+        if (points.size() < 3) {
+            return false;
+        }
+        if (kPts < 1 || kPts > points.size() - 2) {
+            throw new IllegalArgumentException("kPts has to be within 1 and points.size() - 2 inclusive");
+        }
+        if (doubleCompare(length1, 0) < 0 || doubleCompare(length2, 0) < 0) {
+            throw new IllegalArgumentException("Length cannot be less than zero");
+        }
+        boolean twoPointsHasDistanceGreaterThanLength1 = false;
+        for (int i = 0; i < points.size() - kPts - 1; i++) {
+            Point point1 = points.get(i);
+            Point point2 = points.get(i + kPts + 1);
+            if (doubleCompare(distance(point1, point2), length1) > 0) {
+                twoPointsHasDistanceGreaterThanLength1 = true;
+            }
+        }
+        if (!twoPointsHasDistanceGreaterThanLength1) {
+            return false;
+        }
+        for (int i = 0; i < points.size() - kPts - 1; i++) {
+            Point point1 = points.get(i);
+            Point point2 = points.get(i + kPts + 1);
+            if (doubleCompare(distance(point1, point2), length2) < 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private double distance(Point point1, Point point2) {
         double x1 = point1.getX();
         double y1 = point1.getY();
