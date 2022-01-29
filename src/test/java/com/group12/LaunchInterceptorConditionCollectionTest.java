@@ -268,6 +268,149 @@ public class LaunchInterceptorConditionCollectionTest {
                 () -> launchInterceptorConditionCollection.LIC7(points, kPts, length1));
     }
 
+    // Tests for LIC #8
+
+    @Test
+    public void givenFivePointsWithRadiusGreaterThan1AndRadiusIs1_whenLIC8_thenTrue() {
+        List<Point> points = List.of(
+                new Point(-1, 0),
+                new Point(0, 0),
+                new Point(0, 1.1),
+                new Point(0, 0),
+                new Point(1, 0)
+        );
+        int aPts = 1, bPts = 1;
+        double radius = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC8(points, aPts, bPts, radius);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void givenFivePointsWithRadiusEqualTo1AndRadiusIs1_whenLIC8_thenFalse() {
+        List<Point> points = List.of(
+                new Point(-1, 0),
+                new Point(0, 0),
+                new Point(0, 1),
+                new Point(0, 0),
+                new Point(1, 0)
+        );
+        int aPts = 1, bPts = 1;
+        double radius = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC8(points, aPts, bPts, radius);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void givenFivePointsWithRadiusLessThan1AndRadiusIs1_whenLIC8_thenFalse() {
+        List<Point> points = List.of(
+                new Point(-1, 0),
+                new Point(0, 0),
+                new Point(0, 1),
+                new Point(0, 0),
+                new Point(0.9, 0)
+        );
+        int aPts = 1, bPts = 1;
+        double radius = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC8(points, aPts, bPts, radius);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void givenFiveLinearPointsWithRadiusGreaterThan1AndRadiusIs1_whenLIC8_thenTrue() {
+        List<Point> points = List.of(
+                new Point(-1, 0),
+                new Point(0, 0),
+                new Point(0, 0),
+                new Point(0, 0),
+                new Point(1.1, 0)
+        );
+        int aPts = 1, bPts = 1;
+        double radius = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC8(points, aPts, bPts, radius);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void givenLessThanFivePoints_whenLIC8_thenFalse() {
+        List<Point> points = List.of(
+                new Point(-1, 0),
+                new Point(0, 0),
+                new Point(0, 0),
+                new Point(1.1, 0)
+        );
+        int aPts = 1, bPts = 1;
+        double radius = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC8(points, aPts, bPts, radius);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void givenRadiusIsLessThan0_whenLIC8_thenThrowIllegalArgumentException() {
+        List<Point> points = List.of(
+                new Point(-1, 0),
+                new Point(0, 0),
+                new Point(0, 1),
+                new Point(0, 0),
+                new Point(1, 0)
+        );
+        int aPts = 1, bPts = 1;
+        double radius = -0.01;
+
+        assertThrows(IllegalArgumentException.class,
+                () -> launchInterceptorConditionCollection.LIC8(points, aPts, bPts, radius));
+    }
+
+    @Test
+    public void givenPointsIsNull_whenLIC8_thenThrowIllegalArgumentException() {
+        int aPts = 1, bPts = 1;
+        double radius = 1;
+
+        assertThrows(IllegalArgumentException.class,
+                () -> launchInterceptorConditionCollection.LIC8(null, aPts, bPts, radius));
+    }
+
+    @Test
+    public void givenFivePointsAndAPtsLessThan1_whenLIC8_thenThrowIllegalArgumentException() {
+        List<Point> points = List.of(
+                new Point(-1, 0),
+                new Point(0, 0),
+                new Point(0, 1),
+                new Point(0, 0),
+                new Point(1, 0)
+        );
+        int aPts = 0, bPts = 1;
+        double radius = 1;
+
+        assertThrows(IllegalArgumentException.class,
+                () -> launchInterceptorConditionCollection.LIC8(points, aPts, bPts, radius));
+    }
+
+    @Test
+    public void givenFivePointsAndAPtsIs1AndBPtsIs2_whenLIC8_thenThrowIllegalArgumentException() {
+        List<Point> points = List.of(
+                new Point(-1, 0),
+                new Point(0, 0),
+                new Point(0, 1),
+                new Point(0, 0),
+                new Point(1, 0)
+        );
+        int aPts = 1, bPts = 2;
+        double radius = 1;
+
+        assertThrows(IllegalArgumentException.class,
+                () -> launchInterceptorConditionCollection.LIC8(points, aPts, bPts, radius));
+    }
+
     // Tests for LIC 12
 
     @Test
