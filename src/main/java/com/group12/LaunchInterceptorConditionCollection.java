@@ -315,6 +315,65 @@ public class LaunchInterceptorConditionCollection {
         return false;
     }
 
+    /**
+     * LIC #14 checks if there exists at least one set of three data points separated by exactly <b>ePts</b> and <b>fPts</b>
+     * consecutive intervening points, respectively, that are the vertices of a triangle with area greater
+     * than <b>area1</b>, AND if there exist three data points separated by exactly <b>ePts</b> and <b>fPts</b> consecutive
+     * intervening points, respectively, that are the vertices of a triangle with area less than
+     * <b>area2</b>. The condition is not met when <b>points</b> has less than 5 elements.
+     *
+     * @param points list of radar echos ({@link Point})
+     * @param ePts first consecutive intervening points
+     * @param fPts second consecutive intervening points
+     * @param area1 the area of the first triangle
+     * @param area2 the area of the second triangle
+     * @return true if at least one set of three data points separated by exactly <b>ePts</b> and <b>fPts</b>
+     * consecutive intervening points, respectively forms a triangle with an area greater than <b>area1</b>,
+     * and if at least one set of three data points separated by exactly <b>ePts</b> and <b>fPts</b>
+     * consecutive intervening points, respectively forms a triangle with an area less than <b>area2</b>,
+     * and the length of <b>points</b> is 5 or more, false otherwise.
+     * @throws IllegalArgumentException is thrown if <b>points</b> is null,
+     *                                  or if <b>ePts</b> or <b>fPts</b> is less than 1,
+     *                                  or if the length of <b>points</b> - 3 is less than <b>ePts</b> + <b>fPts</b>,
+     *                                  or if <b>area1</b> or <b>area2</b> is less than 0.
+     */
+    public boolean LIC14(List<Point> points, int ePts, int fPts, double area1, double area2) throws IllegalArgumentException {
+        if (points == null) {
+            throw new IllegalArgumentException("Points list cannot be null");
+        }
+        if (points.size() < 5) {
+            return false;
+        }
+        if (ePts < 1 || fPts < 1) {
+            throw new IllegalArgumentException("ePts and fPts must both be 1 or larger");
+        }
+        if (points.size() - 3 < ePts + fPts) {
+            throw new IllegalArgumentException("The size of points - 3 must be more or equal to ePts + fPts");
+        }
+        if (doubleCompare(area1, 0) == -1 || doubleCompare(area2, 0) == -1) {
+            throw new IllegalArgumentException("area1 and area2 cannot be less than zero");
+        }
+
+        boolean existsAreaGreaterThanArea1 = false;
+        boolean existsAreaLessThanArea2 = false;
+
+        for (int i = 0; i < points.size() - ePts - fPts - 2; i++) {
+            Point point1 = points.get(i);
+            Point point2 = points.get(i + 1 + ePts);
+            Point point3 = points.get(i + 2 + ePts + fPts);
+            if (doubleCompare(areaOfTriangle(point1, point2, point3), area1) == 1) {
+                existsAreaGreaterThanArea1 = true;
+            }
+            if (doubleCompare(areaOfTriangle(point1, point2, point3), area2) == -1) {
+                existsAreaLessThanArea2 = true;
+            }
+            if (existsAreaGreaterThanArea1 && existsAreaLessThanArea2) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private double distance(Point point1, Point point2) {
         double x1 = point1.getX();
         double y1 = point1.getY();
