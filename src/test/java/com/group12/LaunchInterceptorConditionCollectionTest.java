@@ -255,6 +255,324 @@ public class LaunchInterceptorConditionCollectionTest {
         assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC3(points, area));
     }
 
+    // Tests for LIC #6
+    @Test
+    public void LIC6_NPTS_TooLow_ThrowIllegalArgumentException() {
+        List<Point> points = List.of(
+                new Point(1, 0), new Point(0, 1),
+                new Point(-1,0), new Point(0, -1)
+        );
+        double dist = 5;
+        int n_pts = 2;
+
+        assertThrows(IllegalArgumentException.class,
+                () -> launchInterceptorConditionCollection.LIC6(points, n_pts, dist));
+    }
+
+    @Test
+    public void LIC6_NPTS_TooLarge_ThrowIllegalArgumentException() {
+        List<Point> points = List.of(
+                new Point(1, 0), new Point(0, 1),
+                new Point(-1,0), new Point(0, -1)
+        );
+        double dist = 5;
+        int n_pts = points.size()+1;
+
+        assertThrows(IllegalArgumentException.class,
+                () -> launchInterceptorConditionCollection.LIC6(points, n_pts, dist));
+    }
+
+    @Test
+    public void LIC6_NPTS_IsThree_NoThrow() {
+        List<Point> points = List.of(
+                new Point(1, 0), new Point(0, 1),
+                new Point(-1,0), new Point(0, -1)
+        );
+        double dist = 5;
+        int n_pts = 3;
+
+        assertDoesNotThrow(() -> launchInterceptorConditionCollection.LIC6(points, n_pts, dist));
+    }
+
+    @Test
+    public void LIC6_NPTS_IsNumPoints_NoThrow() {
+        List<Point> points = List.of(
+                new Point(1, 0), new Point(0, 1),
+                new Point(-1,0), new Point(0, -1)
+        );
+        double dist = 5;
+        int n_pts = points.size();
+
+        assertDoesNotThrow(() -> launchInterceptorConditionCollection.LIC6(points, n_pts, dist));
+    }
+
+    @Test
+    public void LIC6_NumPoints_TooLow_IsFalse() {
+        List<Point> twoPoints = List.of(
+                new Point(1, 0), new Point(0, 1)
+        );
+        double dist = 0.0;
+        int n_pts = 3;
+
+        boolean result = launchInterceptorConditionCollection.LIC6(twoPoints, n_pts, dist);
+        assertFalse(result);
+    }
+
+    @Test
+    public void LIC6_NumPoints_IsThree_NoThrow() {
+        List<Point> points = List.of(
+                new Point(1, 0), new Point(0, 1),
+                new Point(-1,0)
+        );
+        double dist = 5;
+        int n_pts = 3;
+
+        assertDoesNotThrow(() -> launchInterceptorConditionCollection.LIC6(points, n_pts, dist));
+    }
+
+    @Test
+    public void LIC6_Dist_TooLow_ThrowsIllegalArgumentException() {
+        List<Point> points = List.of(
+                new Point(1, 0), new Point(0, 1),
+                new Point(-1,0), new Point(0, -1),
+                new Point(0,0)
+        );
+        double dist = -1;
+        int n_pts = 3;
+
+        assertThrows(IllegalArgumentException.class,
+                () -> launchInterceptorConditionCollection.LIC6(points, n_pts, dist));
+    }
+
+    @Test
+    public void LIC6_Dist_Zero_NoThrow() {
+        List<Point> points = List.of(
+                new Point(1, 0), new Point(0, 1),
+                new Point(-1,0), new Point(0, -1),
+                new Point(0,0)
+        );
+        double dist = 0;
+        int n_pts = 3;
+
+        assertDoesNotThrow(() -> launchInterceptorConditionCollection.LIC6(points, n_pts, dist));
+    }
+
+    @Test
+    public void LIC6_Dist_Zero_IsTrue() {
+        List<Point> points = List.of(
+                new Point(1, 0), new Point(0, 1),
+                new Point(-1,0), new Point(0, -1),
+                new Point(0,0)
+        );
+        double dist = 0;
+        int n_pts = 3;
+
+        boolean result = launchInterceptorConditionCollection.LIC6(points, n_pts, dist);
+        assertTrue(result);
+    }
+
+    @Test
+    public void LIC6_Dist_Positive_NoThrow() {
+        List<Point> points = List.of(
+                new Point(1, 0), new Point(0, 1),
+                new Point(-1,0), new Point(0, -1),
+                new Point(0,0)
+        );
+        double dist = 0;
+        int n_pts = 3;
+
+        assertDoesNotThrow(() -> launchInterceptorConditionCollection.LIC6(points, n_pts, dist));
+    }
+
+    @Test
+    public void LIC6_Dist_Positive_IsTrue() {
+        List<Point> points = List.of(
+                new Point(1, 0), new Point(0, 1),
+                new Point(-1,0), new Point(0, -1),
+                new Point(0,0)
+        );
+        double dist = 0;
+        int n_pts = 3;
+
+        boolean result = launchInterceptorConditionCollection.LIC6(points, n_pts, dist);
+        assertTrue(result);
+    }
+
+    @Test
+    public void LIC6_PointToLineDist_CloserThanDist_IsFalse1() {
+        double mid = Math.sqrt(2)/2;
+        List<Point> points = List.of(
+                new Point(1, 0), new Point(mid, mid),
+                new Point(0, 1), new Point(-mid, mid),
+                new Point(-1,0), new Point(-mid, -mid),
+                new Point(0, -1), new Point(mid, -mid),
+                new Point(1, 0)
+        );
+
+        double dist = 1;
+        int n_pts = 3;
+
+        boolean result = launchInterceptorConditionCollection.LIC6(points, n_pts, dist);
+        assertFalse(result);
+    }
+
+    @Test
+    public void LIC6_PointToLineDist_CloserThanDist_IsFalse2() {
+        double mid = Math.sqrt(2)/2;
+        List<Point> points = List.of(
+                new Point(1, 0), new Point(mid, mid),
+                new Point(0, 1), new Point(-mid, mid),
+                new Point(-1,0), new Point(-mid, -mid),
+                new Point(0, -1), new Point(mid, -mid),
+                new Point(1, 0)
+        );
+
+        double dist = 1;
+        int n_pts = 4;
+
+        boolean result = launchInterceptorConditionCollection.LIC6(points, n_pts, dist);
+        assertFalse(result);
+    }
+
+    @Test
+    public void LIC6_PointToLineDist_EqualToDist_IsFalse2() {
+        double mid = Math.sqrt(2)/2;
+        List<Point> points = List.of(
+                new Point(1, 0), new Point(mid, mid),
+                new Point(0, 1), new Point(-mid, mid),
+                new Point(-1,0), new Point(-mid, -mid),
+                new Point(0, -1), new Point(mid, -mid),
+                new Point(1, 0)
+        );
+
+        double dist = 1;
+        int n_pts = 5;
+
+        boolean result = launchInterceptorConditionCollection.LIC6(points, n_pts, dist);
+        assertFalse(result);
+    }
+
+    @Test
+    public void LIC6_PointToLineDist_GreaterThanDist_IsTrue() {
+        double mid = Math.sqrt(2)/2;
+        List<Point> points = List.of(
+                new Point(1, 0), new Point(mid, mid),
+                new Point(0, 1), new Point(-mid, mid),
+                new Point(-1,0), new Point(-mid, -mid),
+                new Point(0, -1), new Point(mid, -mid),
+                new Point(1, 0)
+        );
+
+        double dist = 0.99998;
+        int n_pts = 5;
+
+        boolean result = launchInterceptorConditionCollection.LIC6(points, n_pts, dist);
+        assertTrue(result);
+    }
+
+    @Test
+    public void LIC6_PointToPointDist_SmallerThanDist_IsFalse() {
+        List<Point> points = List.of(
+                new Point(0, 0), new Point(0, 0), new Point(0, 0),
+                new Point(2, 1), new Point(1, 2), new Point(2, 1),
+                new Point(0, 0), new Point(0, 0), new Point(0,0)
+        );
+
+        double dist = Math.sqrt(2)+0.000002;
+        int n_pts = 3;
+        // Expect to find a point where line dist = sqrt(2)
+        boolean result = launchInterceptorConditionCollection.LIC6(points, n_pts, dist);
+        assertFalse(result);
+    }
+
+    @Test
+    public void LIC6_PointToPointDist_EqualToDist_IsFalse() {
+        List<Point> points = List.of(
+                new Point(0, 0), new Point(0, 0), new Point(0, 0),
+                new Point(0, 0), new Point(0, 0), new Point(0,0),
+                new Point(2, 1), new Point(1, 2), new Point(2, 1)
+        );
+
+        double dist = Math.sqrt(2);
+        int n_pts = 3;
+
+        boolean result = launchInterceptorConditionCollection.LIC6(points, n_pts, dist);
+        assertFalse(result);
+    }
+
+    @Test
+    public void LIC6_PointToPointDist_GreaterThanDist_IsTrue() {
+        List<Point> points = List.of(
+                new Point(2, 1), new Point(1, 2), new Point(2, 1),
+                new Point(0, 0), new Point(0, 0), new Point(0, 0),
+                new Point(0, 0), new Point(0, 0), new Point(0,0)
+        );
+
+        double dist = Math.sqrt(2)-0.000002;
+        int n_pts = 3;
+
+        boolean result = launchInterceptorConditionCollection.LIC6(points, n_pts, dist);
+        assertTrue(result);
+    }
+
+    @Test
+    public void LIC6_LineToPointDist_NPTS_Equals_NumPoints_GreaterThanDist_IsTrue() {
+        List<Point> points = List.of(
+                new Point(2.000001, 1.000001), new Point(0, 0), new Point(2, 1),
+                new Point(0, 0), new Point(0, 0), new Point(2.000002,1.000002)
+        );
+
+        double dist = Math.sqrt(0.5) - 0.000005;
+        int n_pts = points.size();
+
+        boolean result = launchInterceptorConditionCollection.LIC6(points, n_pts, dist);
+        assertTrue(result);
+    }
+
+    @Test
+    public void LIC6_LineToPointDist_NPTS_Equals_NumPoints_EqualToDist_IsFalse() {
+        List<Point> points = List.of(
+                new Point(2.000001, 1.000001), new Point(0, 0), new Point(2, 1),
+                new Point(0, 0), new Point(0, 0), new Point(2.000002,1.000002)
+        );
+
+        double dist = Math.sqrt(0.5);
+        int n_pts = points.size();
+
+        boolean result = launchInterceptorConditionCollection.LIC6(points, n_pts, dist);
+        assertFalse(result);
+    }
+
+    @Test
+    public void LIC6_PointToPointDist_NPTS_Equals_NumPoints_GreaterThanDist_IsTrue() {
+        List<Point> points = List.of(
+                new Point(1.9999996, 0.9999996), new Point(0, 0), new Point(2, 1),
+                new Point(0, 0), new Point(0, 0), new Point(2.0000004,1.0000004)
+        );
+
+        double dist = Math.sqrt(5) - 0.000005;
+        int n_pts = points.size();
+
+        // Expect that first and last points are considered equal and largest distance = sqrt(5)
+        boolean result = launchInterceptorConditionCollection.LIC6(points, n_pts, dist);
+        assertTrue(result);
+    }
+
+    @Test
+    public void LIC6_PointToPointDist_NPTS_Equals_NumPoints_EqualToDist_IsFalse() {
+        List<Point> points = List.of(
+                new Point(1.9999996, 0.9999996), new Point(0, 0), new Point(2, 1),
+                new Point(0, 0), new Point(0, 0), new Point(2.0000004,1.0000004)
+        );
+
+        double dist = Math.sqrt(5);
+        int n_pts = points.size();
+
+        // Expect that first and last points are considered equal and largest distance = sqrt(5)
+        boolean result = launchInterceptorConditionCollection.LIC6(points, n_pts, dist);
+        assertFalse(result);
+    }
+
     // Tests for LIC #7
 
     @Test
