@@ -642,6 +642,115 @@ public class LaunchInterceptorConditionCollectionTest {
                 () -> launchInterceptorConditionCollection.LIC12(points, kPts, length1, length2));
     }
 
+    // Tests for LIC #13
+
+    @Test
+    public void givenFivePointsWithRadiusGreaterThan1AndRadius1Is1AndRadius2Is2_whenLIC13_thenTrue() {
+        List<Point> points = List.of(
+                new Point(-1, 0),
+                new Point(0, 0),
+                new Point(0, 1.1),
+                new Point(0, 0),
+                new Point(1, 0)
+        );
+        int aPts = 1, bPts = 1;
+        double radius1 = 1;
+        double radius2 = 2;
+
+        boolean result = launchInterceptorConditionCollection.LIC13(points, aPts, bPts, radius1, radius2);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void givenFivePointsWithRadiusIs1AndRadius1IsLessThan1AndRadius2Is1_whenLIC13_thenTrue() {
+        List<Point> points = List.of(
+                new Point(-1, 0),
+                new Point(0, 0),
+                new Point(0, 1),
+                new Point(0, 0),
+                new Point(1, 0)
+        );
+        int aPts = 1, bPts = 1;
+        double radius1 = 0.9;
+        double radius2 = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC13(points, aPts, bPts, radius1, radius2);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void givenFivePointsWithRadiusGreaterThan1AndRadius1Is1AndRadius2Is1_whenLIC13_thenFalse() {
+        List<Point> points = List.of(
+                new Point(-1, 0),
+                new Point(0, 0),
+                new Point(0, 1.1),
+                new Point(0, 0),
+                new Point(1, 0)
+        );
+        int aPts = 1, bPts = 1;
+        double radius1 = 1;
+        double radius2 = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC13(points, aPts, bPts, radius1, radius2);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void givenFivePointsWithRadiusGreaterThan1AndRadius2Is1AndRadius2Is2_whenLIC13_thenFalse() {
+        List<Point> points = List.of(
+                new Point(-1, 0),
+                new Point(0, 0),
+                new Point(0, 1.1),
+                new Point(0, 0),
+                new Point(1, 0)
+        );
+        int aPts = 1, bPts = 1;
+        double radius1 = 2;
+        double radius2 = 2;
+
+        boolean result = launchInterceptorConditionCollection.LIC13(points, aPts, bPts, radius1, radius2);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void givenLessThanFivePoints_whenLIC13_thenFalse() {
+        List<Point> points = List.of(
+                new Point(-1, 0),
+                new Point(0, 0),
+                new Point(0, 0),
+                new Point(1.1, 0)
+        );
+        int aPts = 1, bPts = 1;
+        double radius1 = 1;
+        double radius2 = 2;
+
+        boolean result = launchInterceptorConditionCollection.LIC13(points, aPts, bPts, radius1, radius2);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void givenRadiusIsLessThan0_whenLIC13_thenThrowIllegalArgumentException() {
+        List<Point> points = List.of(
+                new Point(-1, 0),
+                new Point(0, 0),
+                new Point(0, 1),
+                new Point(0, 0),
+                new Point(1, 0)
+        );
+        int aPts = 1, bPts = 1;
+        double radius1 = -0.01;
+        double radius2 = 1;
+
+        assertThrows(IllegalArgumentException.class,
+                () -> launchInterceptorConditionCollection.LIC13(points, aPts, bPts, radius1, radius2));
+    }
+
+
     // Tests for LIC #14
 
     @Test

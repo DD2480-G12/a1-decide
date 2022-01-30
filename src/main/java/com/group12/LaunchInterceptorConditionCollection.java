@@ -374,6 +374,65 @@ public class LaunchInterceptorConditionCollection {
         return false;
     }
 
+    /**
+     * LIC #13 checks if there exists at least one set of three data points separated by exactly <b>aPts</b>
+     * and <b>bPts</b> consecutive intervening points respectively that cannot all be contained within or on a circle
+     * of the given <b>radius1</b> (RADIUS1). And there exists at least another set of three data points separated by
+     * exactly <b>aPts</b> and <b>bPts</b> consecutive intervening points respectively that can be contained within or
+     * on a circle of the given <b>radius2</b> (RADIUS2). The condition is not met when less than 5 points are provided.
+     *
+     * @param points  list of radar echos ({@link Point})
+     * @param aPts    number of consecutive intervening points between 1st and 2nd points (greater than 0).
+     * @param bPts    number of consecutive intervening points between 2nd and 3rd points (greater than 0).
+     * @param radius1 has to be greater than 0 (zero)
+     * @param radius2 has to be greater than 0 (zero)
+     * @return true if at least one set of three data points separated by <b>aPts</b> and <b>bPts</b> points forms a
+     * circle with radius greater than given <b>radius1</b>, and at least one set of three data points separated by
+     * <b>aPts</b> and <b>bPts</b> points forms a circle with radius less than given <b>radius2</b>, false otherwise.
+     * Also return false when less than 5 points are provided.
+     * @throws IllegalArgumentException is thrown if arguments are illegal.
+     */
+    public boolean LIC13(List<Point> points, int aPts, int bPts, double radius1, double radius2) throws IllegalArgumentException {
+        if (points == null) {
+            throw new IllegalArgumentException("Points list cannot be null");
+        }
+        if (points.size() < 5) {
+            return false;
+        }
+        if (aPts < 1 || bPts < 1 || aPts + bPts > points.size() - 3) {
+            throw new IllegalArgumentException("Invalid aPts or bPts: must be greater than 0 and form at least 1 separation");
+        }
+        if (doubleCompare(radius1, 0) < 0 || doubleCompare(radius2, 0) < 0) {
+            throw new IllegalArgumentException("Radius cannot be less than zero");
+        }
+
+        boolean threePointsHasRadiusGreaterThanRadius1 = false;
+        for (int i = 0; i < points.size() - 2 - aPts - bPts; i++) {
+            Point point1 = points.get(i);
+            Point point2 = points.get(i + aPts + 1);
+            Point point3 = points.get(i + aPts + bPts + 2);
+            if (doubleCompare(radiusOfSmallestCircle(point1, point2, point3), radius1) == 1) {
+                threePointsHasRadiusGreaterThanRadius1 = true;
+                break;
+            }
+        }
+
+        if (!threePointsHasRadiusGreaterThanRadius1) {
+            return false;
+        }
+
+        for (int i = 0; i < points.size() - 2 - aPts - bPts; i++) {
+            Point point1 = points.get(i);
+            Point point2 = points.get(i + aPts + 1);
+            Point point3 = points.get(i + aPts + bPts + 2);
+            if (doubleCompare(radiusOfSmallestCircle(point1, point2, point3), radius2) != 1) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private double distance(Point point1, Point point2) {
         double x1 = point1.getX();
         double y1 = point1.getY();
