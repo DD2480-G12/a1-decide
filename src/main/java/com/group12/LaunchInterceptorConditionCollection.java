@@ -71,37 +71,39 @@ public class LaunchInterceptorConditionCollection {
     }
 
     /**
-    * LIC #2 checks if the given angle which is constructed from the 3 given data points is not in the range of Pi's deviations (exclusive).
-    *
-    * @param points list of radar echods ({@link Point})
-    * @param epsilon the deviation from Pi
-    * @return true if the angle is smaller than Pi - <b>epsilon</b> or greater than Pi + <b>epsilon</b>
-    * @throws IllegalArgumentException is thrown if <b>points</b> is null, <b>points</b> does not contain 3 elements, 
-    *                                  if the first or last element of <b>points</b> coincides with the second element of <b>points</b>,
-    *                                  if 0 <= <b>epsilon</b> < Pi does not hold.
-    */
-    public boolean LIC2(List<Point> points, double epsilon) throws IllegalArgumentException{
+     * LIC #2 checks if the given angle which is constructed from the 3 given data points is not in the range of Pi's deviations (exclusive).
+     *
+     * @param points  list of radar echods ({@link Point})
+     * @param epsilon the deviation from Pi
+     * @return true if the angle is smaller than Pi - <b>epsilon</b> or greater than Pi + <b>epsilon</b>
+     * @throws IllegalArgumentException is thrown if <b>points</b> is null, <b>points</b> does not contain 3 elements,
+     *                                  if the first or last element of <b>points</b> coincides with the second element of <b>points</b>,
+     *                                  if 0 <= <b>epsilon</b> < Pi does not hold.
+     */
+    public boolean LIC2(List<Point> points, double epsilon) throws IllegalArgumentException {
         if (points == null) {
             throw new IllegalArgumentException("Points list cannot be null");
         }
         if (points.size() < 3) {
-            throw new IllegalArgumentException("There has to be atleast three points");        
+            throw new IllegalArgumentException("There has to be atleast three points");
         }
-        if(doubleCompare(epsilon, 0) == -1 || doubleCompare(epsilon,PI) >= 0){
+        if (doubleCompare(epsilon, 0) == -1 || doubleCompare(epsilon, PI) >= 0) {
             throw new IllegalArgumentException("Epsilon must hold these conditions: 0 <= Epsilon < Pi");
         }
-        for( int i = 0; i<points.size() -2; i += 3){
-            if((points.get(i).getX() == points.get(i+1).getX()) && (points.get(i).getY() == points.get(i+1).getY()) || 
-            ((points.get(i+2).getX() == points.get(i+1).getX()) && (points.get(i+2).getY() == points.get(i+1).getY()))
-            ){
+        for (int i = 0; i < points.size() - 2; i += 3) {
+            Point point1 = points.get(i);
+            Point vertex = points.get(i + 1);
+            Point point2 = points.get(i + 2);
+            if (doubleCompare(point1.getX(), vertex.getX()) == 0 && doubleCompare(point1.getY(), vertex.getY()) == 0 ||
+                    (doubleCompare(point2.getX(), vertex.getX()) == 0 && doubleCompare(point2.getY(), vertex.getY()) == 0)
+            ) {
                 continue;
             }
-            double angle = angleFromThreePoints(points.get(i+1), points.get(i), points.get(i+2));
-            if(doubleCompare(angle, PI - epsilon) == -1 || doubleCompare(angle, PI - epsilon) == 1 ){
+            double angle = angleFromThreePoints(vertex, point1, point2);
+            if (doubleCompare(angle, PI - epsilon) == -1 || doubleCompare(angle, PI + epsilon) == 1) {
                 return true;
             }
         }
-        
         return false;
     }
 
@@ -111,7 +113,7 @@ public class LaunchInterceptorConditionCollection {
      * with an area greater than <b>area1</b>.
      *
      * @param points list of radar echos ({@link Point})
-     * @param area1 has to be greater than or equal to 0 (zero)
+     * @param area1  has to be greater than or equal to 0 (zero)
      * @return true if at least one set of three consecutive data points forms a triangle with an area greater than
      * given <b>area1</b>, false otherwise.
      * @throws IllegalArgumentException is thrown if <b>area1</b> is less than 0 (zero)
@@ -368,13 +370,13 @@ public class LaunchInterceptorConditionCollection {
         return Math.abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2;
     }
 
-    private double angleFromThreePoints(Point vertex, Point point1, Point point2){
+    private double angleFromThreePoints(Point vertex, Point point1, Point point2) {
         double ax = vertex.getX() - point1.getX();
         double ay = vertex.getY() - point1.getY();
         double bx = vertex.getX() - point2.getX();
         double by = vertex.getY() - point2.getY();
-        double maga = Math.sqrt(Math.pow(ax,2) + Math.pow(ay,2));
-        double magb = Math.sqrt(Math.pow(bx,2) + Math.pow(by,2));
-        return Math.acos((ax*bx + ay*by)/(maga*magb));
+        double maga = Math.sqrt(Math.pow(ax, 2) + Math.pow(ay, 2));
+        double magb = Math.sqrt(Math.pow(bx, 2) + Math.pow(by, 2));
+        return Math.acos((ax * bx + ay * by) / (maga * magb));
     }
 }
