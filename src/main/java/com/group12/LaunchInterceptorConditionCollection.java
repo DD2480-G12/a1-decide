@@ -143,12 +143,16 @@ public class LaunchInterceptorConditionCollection {
     /**
      * LIC #6
      *
-     * @param points  points list of radar echos ({@link Point})
-     * @param nPts    number of consecutive intervening radar echos
+     * @param points points list of radar echos ({@link Point})
+     * @param nPts number of consecutive intervening radar echos
      * @param dist has to be greater than or equal to zero
-     * @return true if there is a point in any of the sets of <b>nPts</b> consecutive points   <b>length1</b>
+     * @return true if there is a set of <b>nPts</b> consecutive points in <b>points</b> (and points.size() >= 3) s.t.
+     * 1) the distance between the point and the line defined by the first and last points in the set is greater
+     * than <b>dist</b> or 2) the first and last points in the set are considered equal and there is a point
+     * between them at a distance greater than <b>dist</b> from the coinciding point between the first and the last.
+     * false otherwise.
      * @throws IllegalArgumentException is thrown if <b>points</b> is null, if
-     * <b>kPts</b> is less than 1 or greater than two less than size of <b>points</b>, or if <b>length1</b> is less
+     * <b>nPts</b> is less than 3 or greater than the size of <b>points</b>, or if <b>dist</b> is less
      * than 0 (zero)
      */
 
