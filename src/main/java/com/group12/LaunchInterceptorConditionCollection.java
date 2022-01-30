@@ -141,6 +141,82 @@ public class LaunchInterceptorConditionCollection {
     }
 
     /**
+     * LIC #6
+     *
+     * @param points points list of radar echos ({@link Point})
+     * @param nPts number of consecutive intervening radar echos
+     * @param dist has to be greater than or equal to zero
+     * @return true if there is a set of <b>nPts</b> consecutive points in <b>points</b> (and points.size() >= 3) s.t.
+     * 1) the distance between the point and the line defined by the first and last points in the set is greater
+     * than <b>dist</b> or 2) the first and last points in the set are considered equal and there is a point
+     * between them at a distance greater than <b>dist</b> from the coinciding point between the first and the last.
+     * false otherwise.
+     * @throws IllegalArgumentException is thrown if <b>points</b> is null, if
+     * <b>nPts</b> is less than 3 or greater than the size of <b>points</b>, or if <b>dist</b> is less
+     * than 0 (zero)
+     */
+
+    public boolean LIC6(List<Point> points, int nPts, double dist) throws IllegalArgumentException {
+        if (points == null) {
+            throw new IllegalArgumentException("Points list cannot be null");
+        }
+
+        // The condition is not met when NUMPOINTS < 3
+        if (points.size() < 3) {
+            return false;
+        }
+
+        // Requirement on nPts is 3 <= N_PTS <= NUMPOINTS
+        if (nPts < 3 || nPts > points.size()) {
+            throw new IllegalArgumentException("Parameter nPts has to be within 3 and points.size() inclusive");
+        }
+
+        // Require DIST to be greater than or equal to zero
+        if (doubleCompare(dist, 0) < 0) {
+            throw new IllegalArgumentException("Dist cannot be less than zero");
+        }
+
+        // For each line defined by the points points[i] and points[i+nPts-1]
+        for (int i = 0; i < points.size() - nPts + 1; i++) {
+
+            // The points {points[i]..points[i+nPts-1]} define a set of nPts points
+            Point linePoint1 = points.get(i);
+            Point linePoint2 = points.get(i + nPts - 1);
+
+            // If linePoint1 and linePoint2 are equal, choose a point for distance calculations which is the mean
+            if (pointsEqual(linePoint1, linePoint2)) {
+                double meanX = linePoint1.getX()/2 + linePoint2.getX()/2;
+                double meanY = linePoint1.getY()/2 + linePoint2.getY()/2;
+
+                Point coincidingPoint = new Point(meanX, meanY);
+
+                for(int j = i + 1; j < i + nPts - 1; j++) {
+                    Point p = points.get(j);
+
+                    double d = distance(coincidingPoint, p);
+
+                    if (doubleCompare(d, dist) == 1) {
+                        return true;
+                    }
+                }
+            } else {
+                // For each point points[i+1]..points[i+nPts-2]
+                for(int j = i + 1; j < i + nPts - 1; j++) {
+                    Point p = points.get(j);
+
+                    double d = distanceFromLine(linePoint1, linePoint2, p);
+
+                    if (doubleCompare(d, dist) == 1) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
+    /**
      * LIC #7 checks if at least one set of two data points separated by exactly <b>kPts</b> consecutive intervening
      * points that are a distance greater than <b>length1</b> apart. The condition is not met when <b>points</b> has
      * less than three elements.
@@ -445,6 +521,27 @@ public class LaunchInterceptorConditionCollection {
         if (Math.abs(a - b) < 0.000001) return 0;
         if (a < b) return -1;
         return 1;
+    }
+
+    private boolean pointsEqual(Point p1, Point p2)
+    {
+        return doubleCompare(p1.getX(), p2.getX()) == 0 && doubleCompare(p1.getY(), p2.getY()) == 0;
+    }
+
+    private double distanceFromLine(Point linePoint1, Point linePoint2, Point point)
+    {
+        double x0 = point.getX();
+        double y0 = point.getY();
+
+        double x1 = linePoint1.getX();
+        double x2 = linePoint2.getX();
+        double y1 = linePoint1.getY();
+        double y2 = linePoint2.getY();
+
+        double base_mult_height = Math.abs((x2 - x1) * (y1 - y0) - (x1 - x0) * (y2 - y1));
+        double base = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+
+        return base_mult_height/base;
     }
 
     private double radiusOfSmallestCircle(Point point1, Point point2, Point point3) {
