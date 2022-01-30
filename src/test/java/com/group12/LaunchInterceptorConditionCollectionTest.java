@@ -184,13 +184,22 @@ public class LaunchInterceptorConditionCollectionTest {
     }
 
     @Test
-    public void givenThreeValidPointsAndUnvalidDeviation_whenLIC2_thenThrowIllegalArgumentException(){
+    public void givenThreeValidPointsAndInvalidDeviation_whenLIC2_thenThrowIllegalArgumentException(){
         List<Point> points = List.of(new Point(4, 0), new Point(0, 0), new Point(4, 3));
-        double epsilon = 90.0;
+        double epsilon = 5;
 
         assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC2(points,epsilon));
     }
 
+    @Test
+    public void givenThreeValidPointsThatCreateAngleBiggerThanPiMinusEpsilon_whenLIC2_thenFalse(){
+        List<Point> points = List.of(new Point(4, 0), new Point(0, 0), new Point(4, 3));
+        double epsilon = 2.7;
+
+        boolean result = launchInterceptorConditionCollection.LIC2(points,epsilon);
+        assertFalse(result);
+    }
+    
     // Tests for LIC #3
 
     @Test
