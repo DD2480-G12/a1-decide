@@ -172,13 +172,11 @@ public class LaunchInterceptorConditionCollection {
             Set<Integer> quadsCovered = new HashSet<>();
             for (int j = 0; j < qPts; j++) {
                 Point point = points.get(i + j);
-                double x = point.getX();
-                double y = point.getY();
-                if (x >= 0 && y >= 0) {
+                if (isPointInQuadrantI(point)) {
                     quadsCovered.add(1);
-                } else if (x < 0 && y >= 0) {
+                } else if (isPointInQuadrantII(point)) {
                     quadsCovered.add(2);
-                } else if (x <= 0 && y < 0) {
+                } else if (isPointInQuadrantIII(point)) {
                     quadsCovered.add(3);
                 } else {
                     quadsCovered.add(4);
@@ -644,5 +642,23 @@ public class LaunchInterceptorConditionCollection {
         double maga = Math.sqrt(Math.pow(ax, 2) + Math.pow(ay, 2));
         double magb = Math.sqrt(Math.pow(bx, 2) + Math.pow(by, 2));
         return Math.acos((ax * bx + ay * by) / (maga * magb));
+    }
+
+    private boolean isPointInQuadrantI(Point point) {
+        double x = point.getX();
+        double y = point.getY();
+        return x >= 0 && y >= 0;
+    }
+
+    private boolean isPointInQuadrantII(Point point) {
+        double x = point.getX();
+        double y = point.getY();
+        return x < 0 && y >= 0;
+    }
+
+    private boolean isPointInQuadrantIII(Point point) {
+        double x = point.getX();
+        double y = point.getY();
+        return x <= 0 && y < 0;
     }
 }
