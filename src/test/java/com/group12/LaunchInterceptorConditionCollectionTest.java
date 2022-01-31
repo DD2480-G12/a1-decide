@@ -10,6 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class LaunchInterceptorConditionCollectionTest {
 
+    private static final double PI = 3.1415926535;
+
     private LaunchInterceptorConditionCollection launchInterceptorConditionCollection;
 
     @BeforeEach
@@ -790,6 +792,244 @@ public class LaunchInterceptorConditionCollectionTest {
 
         assertThrows(IllegalArgumentException.class,
                 () -> launchInterceptorConditionCollection.LIC8(points, aPts, bPts, radius));
+    }
+
+    // Tests for LIC #9
+    @Test
+    public void LIC9_Invalid_cPts_dPts_ThrowsIllegalArgumentException() {
+        double mid = Math.sqrt(2)/2;
+        List<Point> points = List.of(
+                new Point(1, 0), new Point(mid, mid),
+                new Point(0, 1), new Point(-mid, mid),
+                new Point(-1,0), new Point(-mid, -mid),
+                new Point(0, -1), new Point(mid, -mid),
+                new Point(1, 0)
+        );
+
+        double epsilon = 0.1;
+        int c_pts = 0;
+        int d_pts = 0;
+
+        assertThrows(IllegalArgumentException.class,
+                () -> launchInterceptorConditionCollection.LIC9(points, c_pts, d_pts, epsilon));
+    }
+
+    @Test
+    public void LIC9_Valid_cPts_dPts_NoThrow() {
+        double mid = Math.sqrt(2)/2;
+        List<Point> points = List.of(
+                new Point(1, 0), new Point(mid, mid), new Point(0,0),
+                new Point(0, 1), new Point(-mid, mid),
+                new Point(-1,0), new Point(-mid, -mid),
+                new Point(0, -1), new Point(mid, -mid),
+                new Point(1, 0)
+        );
+
+        double epsilon = 0.0;
+        int c_pts = 1;
+        int d_pts = 1;
+
+        assertDoesNotThrow(() -> launchInterceptorConditionCollection.LIC9(points, c_pts, d_pts, epsilon));
+    }
+
+    @Test
+    public void LIC9_Invalid_Epsilon_ThrowsIllegalArgumentException1() {
+        double mid = Math.sqrt(2)/2;
+        List<Point> points = List.of(
+                new Point(1, 0), new Point(mid, mid),
+                new Point(0, 1), new Point(-mid, mid),
+                new Point(-1,0), new Point(-mid, -mid),
+                new Point(0, -1), new Point(mid, -mid),
+                new Point(1, 0)
+        );
+
+        double epsilon = -0.1;
+        int c_pts = 1;
+        int d_pts = 1;
+
+        assertThrows(IllegalArgumentException.class,
+                () -> launchInterceptorConditionCollection.LIC9(points, c_pts, d_pts, epsilon));
+    }
+
+    @Test
+    public void LIC9_Invalid_Epsilon_ThrowsIllegalArgumentException2() {
+        double mid = Math.sqrt(2)/2;
+        List<Point> points = List.of(
+                new Point(1, 0), new Point(mid, mid),
+                new Point(0, 1), new Point(-mid, mid),
+                new Point(-1,0), new Point(-mid, -mid),
+                new Point(0, -1), new Point(mid, -mid),
+                new Point(1, 0)
+        );
+
+        double epsilon = PI;
+        int c_pts = 1;
+        int d_pts = 1;
+
+        assertThrows(IllegalArgumentException.class,
+                () -> launchInterceptorConditionCollection.LIC9(points, c_pts, d_pts, epsilon));
+    }
+
+    @Test
+    public void LIC9_Maximal_Unequal_cPts_dPts_IsTrue() {
+        double mid = Math.sqrt(2)/2;
+        List<Point> points = List.of(
+                new Point(1, 0), new Point(mid, mid),
+                new Point(0, 1), new Point(-mid, mid),
+                new Point(-1,0), new Point(-mid, -mid),
+                new Point(0, -1), new Point(mid, -mid),
+                new Point(1, 0)
+        );
+
+        // expect angle 0 radians
+        double epsilon = PI - 0.001;
+        int c_pts = 2;
+        int d_pts = 4;
+
+        boolean result = launchInterceptorConditionCollection.LIC9(points, c_pts, d_pts, epsilon);
+        assertTrue(result);
+    }
+
+
+
+    @Test
+    public void LIC9_Coinciding_Points_IsFalse() {
+        double mid = Math.sqrt(2)/2;
+        List<Point> points = List.of(
+                new Point(mid, mid), new Point(0, 1),
+                new Point(mid, mid), new Point(-mid, -mid),
+                new Point(-1,0), new Point(-mid, -mid)
+        );
+
+        // all triplets (p1,p2,p3) to have a point coinciding with the vertex (p2)
+        double epsilon = 0.0;
+        int c_pts = 1;
+        int d_pts = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC9(points, c_pts, d_pts, epsilon);
+        assertFalse(result);
+    }
+
+    @Test
+    public void LIC9_NumPoints_IsFive_IsFalse() {
+        double mid = Math.sqrt(2)/2;
+        List<Point> points = List.of(
+                new Point(1, 0), new Point(0,0), new Point(mid, mid), new Point(0,0),
+                new Point(0, 0)
+        );
+        // expect to find an angle that is exactly PI/4
+        double epsilon = PI * 3/4; // epsilon excludes all angles >= PI/4
+        int c_pts = 1;
+        int d_pts = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC9(points, c_pts, d_pts, epsilon);
+        assertFalse(result);
+    }
+
+    @Test
+    public void LIC9_NumPoints_IsFive_IsTrue() {
+        double mid = Math.sqrt(2)/2;
+        List<Point> points = List.of(
+                new Point(1, 0), new Point(0,0), new Point(0, 0), new Point(0,0),
+                new Point(mid, mid)
+        );
+        // expect to find an angle that is exactly PI/4
+
+        double epsilon = PI * 3/4 - 0.001; // epsilon excludes all angles >= (PI/4 + 0.001)
+        int c_pts = 1;
+        int d_pts = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC9(points, c_pts, d_pts, epsilon);
+        assertTrue(result);
+    }
+
+    @Test
+    public void LIC9_NumPoints_IsFive_Perpendicular_IsFalse() {
+        double mid = Math.sqrt(2)/2;
+        List<Point> points = List.of(
+                new Point(mid, mid), new Point(0,0), new Point(mid, -mid), new Point(0,0),
+                new Point(0, 0)
+        );
+        // expect to find an angle that is exactly PI/4
+
+        double epsilon = PI * 3/4;
+        int c_pts = 1;
+        int d_pts = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC9(points, c_pts, d_pts, epsilon);
+        assertFalse(result);
+    }
+
+    @Test
+    public void LIC9_NumPoints_IsFive_Perpendicular_IsTrue() {
+        double mid = Math.sqrt(2)/2;
+        List<Point> points = List.of(
+                new Point(mid, mid), new Point(0,0), new Point(mid, -mid), new Point(0,0),
+                new Point(0, 0)
+        );
+        // expect to find an angle that is exactly PI/2
+
+        double epsilon = PI/2 - 0.001;
+        int c_pts = 1;
+        int d_pts = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC9(points, c_pts, d_pts, epsilon);
+        assertTrue(result);
+    }
+
+    @Test
+    public void LIC9_NumPoints_IsFour_IsFalse() {
+        double mid = Math.sqrt(2)/2;
+        List<Point> points = List.of(
+                new Point(1, 0), new Point(0,0), new Point(mid, mid), new Point(0,0)
+        );
+
+        double epsilon = PI * 3/4 - 0.001; // epsilon excludes all angles >= (PI/4 + 0.001)
+        int c_pts = 1;
+        int d_pts = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC9(points, c_pts, d_pts, epsilon);
+        assertFalse(result);
+    }
+
+    @Test
+    public void LIC9_Typical_Angle_IsTrue() {
+        double mid = Math.sqrt(2)/2;
+        List<Point> points = List.of(
+                new Point(1, 0), new Point(mid, mid),
+                new Point(0, 1), new Point(-mid, mid),
+                new Point(-1,0), new Point(-mid, -mid),
+                new Point(0, -1), new Point(mid, -mid),
+                new Point(0,0)
+        );
+
+        // Expect PI/4
+        double epsilon = PI * 3/4 - 0.001;
+        int c_pts = 1;
+        int d_pts = 5;
+
+        boolean result = launchInterceptorConditionCollection.LIC9(points, c_pts, d_pts, epsilon);
+        assertTrue(result);
+    }
+
+    @Test
+    public void LIC9_Typical_Angle_IsFalse() {
+        double mid = Math.sqrt(2)/2;
+        List<Point> points = List.of(
+                new Point(1, 0), new Point(mid, mid),
+                new Point(0, 1), new Point(-mid, mid),
+                new Point(-1,0), new Point(-mid, -mid),
+                new Point(0, -1), new Point(mid, -mid),
+                new Point(0,0)
+        );
+
+        // Expect PI/4
+        double epsilon = PI * 3/4 + 0.001;
+        int c_pts = 1;
+        int d_pts = 5;
+
+        boolean result = launchInterceptorConditionCollection.LIC9(points, c_pts, d_pts, epsilon);
+        assertFalse(result);
     }
 
     // Tests for LIC #10

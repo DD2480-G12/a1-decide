@@ -292,6 +292,56 @@ public class LaunchInterceptorConditionCollection {
     }
 
     /**
+     * LIC #9
+     *
+     * @param points points list of radar echos ({@link Point})
+     * @param cPts number of consecutive intervening radar echos
+     * @param dPts number of consecutive intervening radar echos
+     * @param epsilon angle offset from PI
+     * @return true if there are three consecutive points where p1 and p2 are separated by <b>cPts</b> points,
+     * and p2 and p3 are separated by <b>dPts</b> points, and the two lines drawn from p1 to p2 and p3 to p2,
+     * form an angle greater than (PI + epsilon) or smaller than (PI - epsilon).
+     * @throws IllegalArgumentException is thrown if <b>points</b> is null. Also throws if epsilon is not between 0
+     * (inclusive) and PI (exclusive). In addition, the exception is thrown if <b>cPts</b> or <b>cPts</b> is less than 1
+     * or if their sum is greater than the number of points in the list - 3.
+     */
+
+    public boolean LIC9(List<Point> points, int cPts, int dPts, double epsilon) throws IllegalArgumentException {
+        if (points == null) {
+            throw new IllegalArgumentException("Points list cannot be null");
+        }
+
+        // The condition is not met when NUMPOINTS < 5
+        if (points.size() < 5) {
+            return false;
+        }
+
+        if (cPts < 1 || dPts < 1) {
+            throw new IllegalArgumentException("Parameters cPts and dPts both have to be greater than or equal to 1");
+        }
+
+        if (cPts + dPts > points.size() - 3) {
+            throw new IllegalArgumentException("Parameters cPts and dPts are required to sum to at most NUMPOINTS - 3");
+        }
+
+        if (doubleCompare(epsilon ,0.0)  == -1 || doubleCompare(epsilon, PI) != -1) {
+            throw new IllegalArgumentException("Parameter epsilon must be greater than or equal to 0.0 and smaller than PI");
+        }
+
+        for (int i = 0; i < points.size() - (cPts + dPts + 2); i++) {
+            Point p1 = points.get(i);
+            Point p2 = points.get(i + cPts + 1);
+            Point p3 = points.get(i + cPts + dPts + 2);
+
+            if (threePointsFulfillAngle(p2, p1, p3, epsilon))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * LIC #10 checks if there exists at least one set of three data points separated by exactly <b>ePts</b> and <b>fPts</b>
      * consecutive intervening points, respectively, that are the vertices of a triangle with area greater
      * than area1. The condition is not met when <b>points</b> has less than 5 elements.
@@ -593,5 +643,24 @@ public class LaunchInterceptorConditionCollection {
         double maga = Math.sqrt(Math.pow(ax, 2) + Math.pow(ay, 2));
         double magb = Math.sqrt(Math.pow(bx, 2) + Math.pow(by, 2));
         return Math.acos((ax * bx + ay * by) / (maga * magb));
+    }
+
+    private boolean threePointsFulfillAngle(Point v, Point p1, Point p2, double epsilon){
+        // If either the first
+        //point or the last point (or both) coincide with the vertex, the angle is undefined and the LIC
+        //is not satisfied by those three points.
+        if (!pointsEqual(v, p1) && !pointsEqual(v, p2)) {
+            double angle = angleFromThreePoints(v, p1, p2);
+
+            // assumptions:
+            // angle < (PI - eps) <=> 2PI - angle > (PI + eps)
+            // angle > (PI + eps) <=> 2PI - angle < (PI - eps)
+            int lt = doubleCompare(angle, PI - epsilon);
+            int gt = doubleCompare(angle, PI + epsilon);
+            if (lt == -1 || gt == 1) {
+                return true;
+            }
+        }
+        return false;
     }
 }
