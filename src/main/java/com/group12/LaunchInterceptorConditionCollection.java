@@ -180,23 +180,11 @@ public class LaunchInterceptorConditionCollection {
 
     private Set<Integer> getQuadsCovered(List<Point> points) {
         return points.stream().map(point -> {
-            if (isPointInQuadrantI(point)) return 1;
-            if (isPointInQuadrantII(point)) return 2;
-            if (isPointInQuadrantIII(point)) return 3;
+            if (point.getX() >= 0 && point.getY() >= 0) return 1;
+            if (point.getX() < 0 && point.getY() >= 0) return 2;
+            if (point.getX() <= 0 && point.getY() < 0) return 3;
             return 4;
         }).collect(Collectors.toSet());
-    }
-
-    private boolean isPointInQuadrantI(Point point) {
-        return point.getX() >= 0 && point.getY() >= 0;
-    }
-
-    private boolean isPointInQuadrantII(Point point) {
-        return point.getX() < 0 && point.getY() >= 0;
-    }
-
-    private boolean isPointInQuadrantIII(Point point) {
-        return point.getX() <= 0 && point.getY() < 0;
     }
 
     /**
