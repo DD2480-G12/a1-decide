@@ -2,9 +2,9 @@ package com.group12;
 
 import com.group12.model.Point;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class LaunchInterceptorConditionCollection {
 
@@ -169,19 +169,10 @@ public class LaunchInterceptorConditionCollection {
             throw new IllegalArgumentException("quads has to be between 1 and 3 (inclusive)");
         }
         for (int i = 0; i < points.size() - qPts + 1; i++) {
-            Set<Integer> quadsCovered = new HashSet<>();
-            for (int j = 0; j < qPts; j++) {
-                Point point = points.get(i + j);
-                if (isPointInQuadrantI(point)) {
-                    quadsCovered.add(1);
-                } else if (isPointInQuadrantII(point)) {
-                    quadsCovered.add(2);
-                } else if (isPointInQuadrantIII(point)) {
-                    quadsCovered.add(3);
-                } else {
-                    quadsCovered.add(4);
-                }
-            }
+            List<Point> consecutivePoints = points.subList(i, i + qPts);
+            Set<Integer> quadsCovered = consecutivePoints.stream()
+                    .map(this::toQuadrantPointIsIn)
+                    .collect(Collectors.toSet());
             if (quadsCovered.size() > quads) {
                 return true;
             }
@@ -642,6 +633,19 @@ public class LaunchInterceptorConditionCollection {
         double maga = Math.sqrt(Math.pow(ax, 2) + Math.pow(ay, 2));
         double magb = Math.sqrt(Math.pow(bx, 2) + Math.pow(by, 2));
         return Math.acos((ax * bx + ay * by) / (maga * magb));
+    }
+
+    private Integer toQuadrantPointIsIn(Point point) {
+        if (isPointInQuadrantI(point)) {
+            return 1;
+        }
+        if (isPointInQuadrantII(point)) {
+            return 2;
+        }
+        if (isPointInQuadrantIII(point)) {
+            return 3;
+        }
+        return 4;
     }
 
     private boolean isPointInQuadrantI(Point point) {
