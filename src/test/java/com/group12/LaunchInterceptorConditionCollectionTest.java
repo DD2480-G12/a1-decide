@@ -267,6 +267,103 @@ public class LaunchInterceptorConditionCollectionTest {
         assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC3(points, area));
     }
 
+    // Tests for LIC #4
+
+    @Test
+    public void givenAPointOnQuadIAndAPointOnQuadIIAndQPtsIs2AndQuads1_whenLIC4_thenTrue() {
+        List<Point> points = List.of(new Point(1, 1), new Point(-1, 1));
+        int qPts = 2;
+        int quads = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC4(points, qPts, quads);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void givenAPointOnPositiveXAxisAndAPointOnNegativeXAxisAndQPtsIs2AndQuads1_whenLIC4_thenTrue() {
+        List<Point> points = List.of(new Point(1, 0), new Point(-1, 0));
+        int qPts = 2;
+        int quads = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC4(points, qPts, quads);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void givenAPointOnNegativeYAxisAPointInQuadIVAndQPtsIs2AndQuads1_whenLIC4_thenTrue() {
+        List<Point> points = List.of(new Point(0, -1), new Point(1, -1));
+        int qPts = 2;
+        int quads = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC4(points, qPts, quads);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void givenAPointInOriginAndAPointInQuadIAndQPtsIs2AndQuads1_whenLIC4_thenFalse() {
+        List<Point> points = List.of(new Point(0, 0), new Point(1, 1));
+        int qPts = 2;
+        int quads = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC4(points, qPts, quads);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void givenAPointOnNegativeYAxisAndAPointInQuadIIIAndQPtsIs2AndQuads1_whenLIC4_thenFalse() {
+        List<Point> points = List.of(new Point(0, -1), new Point(-1, -1));
+        int qPts = 2;
+        int quads = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC4(points, qPts, quads);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void givenTwoPointsAndQPtsIs3_whenLIC4_thenIllegalArgumentException() {
+        List<Point> points = List.of(new Point(0, 0), new Point(1, 1));
+        int qPts = 3;
+        int quads = 1;
+
+        assertThrows(IllegalArgumentException.class,
+                () -> launchInterceptorConditionCollection.LIC4(points, qPts, quads));
+    }
+
+    @Test
+    public void givenTwoPointsAndQPtsIs1_whenLIC4_thenIllegalArgumentException() {
+        List<Point> points = List.of(new Point(0, 0), new Point(1, 1));
+        int qPts = 1;
+        int quads = 1;
+
+        assertThrows(IllegalArgumentException.class,
+                () -> launchInterceptorConditionCollection.LIC4(points, qPts, quads));
+    }
+
+    @Test
+    public void givenQuadsIs0_whenLIC4_thenIllegalArgumentException() {
+        List<Point> points = List.of(new Point(0, 0), new Point(1, 1));
+        int qPts = 2;
+        int quads = 0;
+
+        assertThrows(IllegalArgumentException.class,
+                () -> launchInterceptorConditionCollection.LIC4(points, qPts, quads));
+    }
+
+    @Test
+    public void givenQuadsIs4_whenLIC4_thenIllegalArgumentException() {
+        List<Point> points = List.of(new Point(0, 0), new Point(1, 1));
+        int qPts = 2;
+        int quads = 4;
+
+        assertThrows(IllegalArgumentException.class,
+                () -> launchInterceptorConditionCollection.LIC4(points, qPts, quads));
+    }
+
     // Tests for LIC #5
 
     @Test
