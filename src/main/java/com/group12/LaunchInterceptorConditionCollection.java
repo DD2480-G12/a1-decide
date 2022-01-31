@@ -178,6 +178,33 @@ public class LaunchInterceptorConditionCollection {
         return false;
     }
 
+    private Set<Integer> getQuadsCovered(List<Point> points) {
+        return points.stream().map(point -> {
+            if (isPointInQuadrantI(point)) return 1;
+            if (isPointInQuadrantII(point)) return 2;
+            if (isPointInQuadrantIII(point)) return 3;
+            return 4;
+        }).collect(Collectors.toSet());
+    }
+
+    private boolean isPointInQuadrantI(Point point) {
+        double x = point.getX();
+        double y = point.getY();
+        return x >= 0 && y >= 0;
+    }
+
+    private boolean isPointInQuadrantII(Point point) {
+        double x = point.getX();
+        double y = point.getY();
+        return x < 0 && y >= 0;
+    }
+
+    private boolean isPointInQuadrantIII(Point point) {
+        double x = point.getX();
+        double y = point.getY();
+        return x <= 0 && y < 0;
+    }
+
     /**
      * LIC #6
      *
@@ -631,32 +658,5 @@ public class LaunchInterceptorConditionCollection {
         double maga = Math.sqrt(Math.pow(ax, 2) + Math.pow(ay, 2));
         double magb = Math.sqrt(Math.pow(bx, 2) + Math.pow(by, 2));
         return Math.acos((ax * bx + ay * by) / (maga * magb));
-    }
-
-    private Set<Integer> getQuadsCovered(List<Point> points) {
-        return points.stream().map(point -> {
-           if (isPointInQuadrantI(point)) return 1;
-           if (isPointInQuadrantII(point)) return 2;
-           if (isPointInQuadrantIII(point)) return 3;
-           return 4;
-        }).collect(Collectors.toSet());
-    }
-
-    private boolean isPointInQuadrantI(Point point) {
-        double x = point.getX();
-        double y = point.getY();
-        return x >= 0 && y >= 0;
-    }
-
-    private boolean isPointInQuadrantII(Point point) {
-        double x = point.getX();
-        double y = point.getY();
-        return x < 0 && y >= 0;
-    }
-
-    private boolean isPointInQuadrantIII(Point point) {
-        double x = point.getX();
-        double y = point.getY();
-        return x <= 0 && y < 0;
     }
 }
