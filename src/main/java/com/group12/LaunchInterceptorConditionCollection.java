@@ -176,6 +176,40 @@ public class LaunchInterceptorConditionCollection {
     }
 
     /**
+     * LIC #11 checks if there exists two data points which are separated by <b>gPts</b> consecutive data points where
+     * the x-coordinate of the former data point is greater than the x-coordinate of the latter data point.
+     * The condition is not met if the number data points is less than three.
+     *
+     * @param points list of radar echos ({@link Point})
+     * @param gPts number of consecutive intervening points
+     * @return true if there exists two points that are separeated by <b>gPts</b> points where the former point has a
+     *         greater x-coordinate than the latter point, if not then false. Also false if <b>points.size()</b> < 3
+     * @throws IllegalArgumentException is thrown if <b>points</b> is null or the following does not hold:
+     *                                  1 <= <b>gPts</b> <= <b>points.size()</b> - 2
+     */
+    public boolean LIC11(List<Point> points, int gPts) throws IllegalArgumentException{
+        if (points == null) {
+            throw new IllegalArgumentException("Points list cannot be null");
+        }
+        if (points.size() < 3) {
+            return false;
+        }
+        if(!(1 <= gPts) || !(gPts <= points.size() - 2)){
+            throw new IllegalArgumentException("Invalid gPts or points, the following must hold: 1 <= gPts <= points.size() - 2");
+        }
+        for(int i = 0; i < points.size() - gPts - 1; i++){
+            int j = i + gPts + 1;
+            Point pointi = points.get(i);
+            Point pointj = points.get(j);
+            if(doubleCompare(pointj.getX() - pointi.getX(), 0) == -1){
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    /**
      * LIC #12 checks if at least one set of two data points, separated by exatcly <b>kPts</b> consecutive intervening
      * points, which are a distance greater than the length <b>length1</b> apart. In addition, there exists at least
      * one set of two data points (which can be the same or different from thw two data points just mentioned),
