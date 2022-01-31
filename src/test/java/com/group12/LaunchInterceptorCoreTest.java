@@ -71,4 +71,32 @@ public class LaunchInterceptorCoreTest {
 
         assertThrows(IllegalArgumentException.class, () -> launchInterceptorCore.calculatePUM(cmv, null));
     }
+
+    // FUV tests
+
+    @Test
+    public void givenPumAndPuv_whenCalculateFUV_thenExpectedFUV() {
+        boolean[][] pum = {{true, false}, {false, false}, {true, true}, {true, false}, {false, false}};
+        boolean[] puv = {false, false, true, true, true};
+        boolean[] expectedFuv = {true, true, true, false, false};
+
+        boolean[] actualFuv = launchInterceptorCore.calculateFUV(pum, puv);
+
+        assertArrayEquals(expectedFuv, actualFuv);
+    }
+
+    @Test
+    public void givenPumAndPuvNotSameLength_whenCalculateFUV_thenThrowIllegalArgumentException() {
+        boolean[][] pum = {{true, false}, {false, false}};
+        boolean[] puv = {false, false, true};
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorCore.calculateFUV(pum, puv));
+    }
+
+    @Test
+    public void givenPuvIsNull_whenCalculateFUV_thenThrowIllegalArgumentException() {
+        boolean[][] pum = {{true, false}, {false, false}};
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorCore.calculateFUV(pum, null));
+    }
 }

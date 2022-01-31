@@ -43,4 +43,43 @@ public class LaunchInterceptorCore {
         }
         return pum;
     }
+
+    /**
+     * Calculates Final Unlocking Vector (FUV) by going through the PUM and the PUV.
+     *
+     * @param pum Preliminary Unlocking Matrix
+     * @param puv Preliminary Unlocking Vector
+     * @return Final Unlocking Vector
+     * @throws IllegalArgumentException if <b>puv</b> is null or if the length of <b>pum</b> and <b>puv</b>
+     * is not the same.
+     */
+    public boolean[] calculateFUV(boolean[][] pum, boolean[] puv) throws IllegalArgumentException {
+        if (puv == null) {
+            throw new IllegalArgumentException("puv cannot be null");
+        }
+        if (pum.length != puv.length) {
+            throw new IllegalArgumentException("pum has to have " + puv.length + " number of rows");
+        }
+
+        boolean[] fuv = new boolean[pum.length];
+        for (int i = 0; i < pum.length; i++) {
+            if (!puv[i]) {
+                fuv[i] = true;
+            } else {
+                boolean allTrue = true;
+                for (int j = 0; j < pum[i].length; j++) {
+                    if (!pum[i][j]) {
+                        allTrue = false;
+                        break;
+                    }
+                }
+                if (allTrue) {
+                    fuv[i] = true;
+                } else {
+                    fuv[i] = false;
+                }
+            }
+        }
+        return fuv;
+    }
 }
