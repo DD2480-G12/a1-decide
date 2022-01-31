@@ -888,6 +888,84 @@ public class LaunchInterceptorConditionCollectionTest {
         assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC10(points, ePts, fPts, area));
     }
 
+    // Tests for LIC 11
+
+    @Test
+    public void givenThreePointsAndgPtsIs1_whenLIC11_thenTrue(){
+        List<Point> points = List.of(new Point(1, 0), new Point(0, 0), new Point(0, 0));
+        int gPts = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC11(points, gPts);
+
+        assertTrue(result);
+
+    }
+
+    @Test
+    public void givenThreePointsAndgPtsIs1_whenLIC11_thenFalse(){
+        List<Point> points = List.of(new Point(0, 0), new Point(0, 0), new Point(1, 0));
+        int gPts = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC11(points, gPts);
+
+        assertFalse(result);
+
+    }
+
+    @Test
+    public void givenFivePointsAndgPtsIs2_whenLIC11_thenTrue(){
+        List<Point> points = List.of(new Point(0, 0), new Point(4, 0), new Point(1, 0), new Point(1, 0), new Point(3, 0));
+        int gPts = 2;
+
+        boolean result = launchInterceptorConditionCollection.LIC11(points, gPts);
+
+        assertTrue(result);
+
+    }
+
+    @Test
+    public void givenNullPointsAndgPtsIs2_whenLIC11_thenThrowIllegalArgumentException(){
+        List<Point> points = null;
+        int gPts = 2;
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC11(points,gPts));
+
+    }
+
+    @Test
+    public void givenThreePointsAndgPtsGreaterThanNumberOfPointsMinus2_whenLIC11_thenThrowIllegalArgumentException(){
+        List<Point> points = List.of(new Point(1, 0), new Point(0, 0), new Point(0, 0));
+        int gPts = 5;
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC11(points,gPts));
+    }
+
+    @Test
+    public void givenThreePointsAndgPtsLesserThanOne_whenLIC11_thenThrowIllegalArgumentException(){
+        List<Point> points = List.of(new Point(1, 0), new Point(0, 0), new Point(0, 0));
+        int gPts = -1;
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC11(points,gPts));
+    }
+
+    @Test
+    public void givenTwoPointsAndgPtsIs1_whenLIC11_thenFalse(){
+        List<Point> points = List.of(new Point(1, 0), new Point(0, 0));
+        int gPts = 1;
+
+        boolean result = launchInterceptorConditionCollection.LIC11(points, gPts);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void givenFourPointsAndgPtsIs3_whenLIC11_thenThrowIllegalArgumentException(){
+        List<Point> points = List.of(new Point(1, 0), new Point(0, 0), new Point(1, 0), new Point(0, 0));
+        int gPts = 3;
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC11(points,gPts));
+    }
+
     // Tests for LIC 12
 
     @Test
