@@ -275,6 +275,28 @@ public class LaunchInterceptorConditionCollectionTest {
         assertFalse(result);
     }
 
+    @Test
+    public void givenTwoSetsOfPointsWhereSecondSetXCoordinateOfFirstPointGreaterThanSecondPoint_whenLIC5_thenTrue(){
+        List<Point> points = List.of(new Point(0, 0), new Point(1, 0), new Point(1, 0), new Point(0, 0));
+
+        boolean result = launchInterceptorConditionCollection.LIC5(points);
+
+        assertTrue(result);
+
+    }
+
+    @Test
+    public void givenNullSetsOfPoints_whenLIC5_thenThrowIllegalArgumentException(){
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC5(null));
+    }
+
+    @Test
+    public void givenTooFewPoints_whenLIC5_thenThrowIllegalArgumentException() {
+        List<Point> points = List.of(new Point(0, 0));
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC5(points));
+    }
+
     // Tests for LIC #6
     @Test
     public void LIC6_NPTS_TooLow_ThrowIllegalArgumentException() {
@@ -336,28 +358,6 @@ public class LaunchInterceptorConditionCollectionTest {
 
         boolean result = launchInterceptorConditionCollection.LIC6(twoPoints, n_pts, dist);
         assertFalse(result);
-    }
-
-    @Test
-    public void givenTwoSetsOfPointsWhereSecondSetXCoordinateOfFirstPointGreaterThanSecondPoint_whenLIC5_thenTrue(){
-        List<Point> points = List.of(new Point(0, 0), new Point(1, 0), new Point(1, 0), new Point(0, 0));
-
-        boolean result = launchInterceptorConditionCollection.LIC5(points);
-
-        assertTrue(result);
-
-    }
-
-    @Test
-    public void givenNullSetsOfPoints_whenLIC5_thenThrowIllegalArgumentException(){
-        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC5(null));
-    }
-
-    @Test
-    public void givenTooFewPoints_whenLIC5_thenThrowIllegalArgumentException() {
-        List<Point> points = List.of(new Point(0, 0));
-
-        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC5(points));
     }
 
     public void LIC6_NumPoints_IsThree_NoThrow() {
