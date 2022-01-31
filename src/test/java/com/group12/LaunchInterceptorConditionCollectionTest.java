@@ -200,6 +200,16 @@ public class LaunchInterceptorConditionCollectionTest {
         assertFalse(result);
     }
 
+    @Test
+    public void givenSevenPointsWithFirstThreeNotValidAndValidDeviation_when_LIC2_thenTrue(){
+        List<Point> points = List.of(new Point(0, 0), new Point(0, 0), new Point(0, 0), new Point(0, 0), new Point(4, 0), new Point(0, 0), new Point(4, 3));
+        double epsilon = 2.0;
+
+        boolean result = launchInterceptorConditionCollection.LIC2(points,epsilon);
+
+        assertTrue(result);
+    }
+
     // Tests for LIC #3
 
     @Test

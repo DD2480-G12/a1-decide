@@ -90,7 +90,7 @@ public class LaunchInterceptorConditionCollection {
         if (doubleCompare(epsilon, 0) == -1 || doubleCompare(epsilon, PI) >= 0) {
             throw new IllegalArgumentException("Epsilon must hold these conditions: 0 <= Epsilon < Pi");
         }
-        for (int i = 0; i < points.size() - 2; i += 3) {
+        for (int i = 0; i < points.size() - 2; i++) {
             Point point1 = points.get(i);
             Point vertex = points.get(i + 1);
             Point point2 = points.get(i + 2);
