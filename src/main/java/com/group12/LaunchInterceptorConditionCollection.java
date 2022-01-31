@@ -170,9 +170,7 @@ public class LaunchInterceptorConditionCollection {
         }
         for (int i = 0; i < points.size() - qPts + 1; i++) {
             List<Point> consecutivePoints = points.subList(i, i + qPts);
-            Set<Integer> quadsCovered = consecutivePoints.stream()
-                    .map(this::toQuadrantPointIsIn)
-                    .collect(Collectors.toSet());
+            Set<Integer> quadsCovered = getQuadsCovered(consecutivePoints);
             if (quadsCovered.size() > quads) {
                 return true;
             }
@@ -635,17 +633,13 @@ public class LaunchInterceptorConditionCollection {
         return Math.acos((ax * bx + ay * by) / (maga * magb));
     }
 
-    private Integer toQuadrantPointIsIn(Point point) {
-        if (isPointInQuadrantI(point)) {
-            return 1;
-        }
-        if (isPointInQuadrantII(point)) {
-            return 2;
-        }
-        if (isPointInQuadrantIII(point)) {
-            return 3;
-        }
-        return 4;
+    private Set<Integer> getQuadsCovered(List<Point> points) {
+        return points.stream().map(point -> {
+           if (isPointInQuadrantI(point)) return 1;
+           if (isPointInQuadrantII(point)) return 2;
+           if (isPointInQuadrantIII(point)) return 3;
+           return 4;
+        }).collect(Collectors.toSet());
     }
 
     private boolean isPointInQuadrantI(Point point) {
