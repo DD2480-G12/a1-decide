@@ -141,6 +141,34 @@ public class LaunchInterceptorConditionCollection {
     }
 
     /**
+     * LIC #5 check if there exists a set of two consecutive data points where the x-value of the former data point is
+     * greater than the latter data point
+     * @param points list of radar echos ({@link Point})
+     * @return true if there exists a set of two consecutive data points where the x-value of the former data point is
+     * greater than the latter one.
+     * @throws IllegalArgumentException is thrown if a null list of data points is given as parameter or if a list of
+     * size smaller than 2 is given as a parameter.
+     */
+    public boolean LIC5(List<Point> points) throws IllegalArgumentException {
+        if (points == null) {
+            throw new IllegalArgumentException("Points list cannot be null");
+        }
+        if (points.size() < 2) {
+            throw new IllegalArgumentException("There has to be at least two given points");
+        }
+        for (int i = 0; i < points.size() - 1; i++) {
+            int j = i + 1;
+            Point pointi = points.get(i);
+            Point pointj = points.get(j);
+
+            if (doubleCompare(pointj.getX() - pointi.getX(), 0) == -1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * LIC #6
      *
      * @param points points list of radar echos ({@link Point})

@@ -255,6 +255,48 @@ public class LaunchInterceptorConditionCollectionTest {
         assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC3(points, area));
     }
 
+    // Tests for LIC #5
+
+    @Test
+    public void givenTwoPointsWhereXCoordinateOfFirstPointGreaterThanSecondPoint_whenLIC5_thenTrue(){
+        List<Point> points = List.of(new Point(1, 0), new Point(0, 0));
+
+        boolean result = launchInterceptorConditionCollection.LIC5(points);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void givenTwoPointsWhereXCoordinateOfFirstPointLesserThanSecondPoint_whenLIC5_thenFalse() {
+        List<Point> points = List.of(new Point(0, 0), new Point(1, 0));
+
+        boolean result = launchInterceptorConditionCollection.LIC5(points);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void givenTwoSetsOfPointsWhereSecondSetXCoordinateOfFirstPointGreaterThanSecondPoint_whenLIC5_thenTrue(){
+        List<Point> points = List.of(new Point(0, 0), new Point(1, 0), new Point(1, 0), new Point(0, 0));
+
+        boolean result = launchInterceptorConditionCollection.LIC5(points);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void givenNullSetsOfPoints_whenLIC5_thenThrowIllegalArgumentException(){
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC5(null));
+    }
+
+    @Test
+    public void givenTooFewPoints_whenLIC5_thenThrowIllegalArgumentException() {
+        List<Point> points = List.of(new Point(0, 0));
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC5(points));
+    }
+
+
     // Tests for LIC #6
     @Test
     public void LIC6_NPTS_TooLow_ThrowIllegalArgumentException() {
