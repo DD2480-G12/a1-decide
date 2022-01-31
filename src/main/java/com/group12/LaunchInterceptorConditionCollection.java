@@ -170,8 +170,7 @@ public class LaunchInterceptorConditionCollection {
         }
         for (int i = 0; i < points.size() - qPts + 1; i++) {
             List<Point> consecutivePoints = points.subList(i, i + qPts);
-            Set<Integer> quadsCovered = getQuadsCovered(consecutivePoints);
-            if (quadsCovered.size() > quads) {
+            if (getQuadsCovered(consecutivePoints).size() > quads) {
                 return true;
             }
         }
