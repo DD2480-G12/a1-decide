@@ -188,21 +188,15 @@ public class LaunchInterceptorConditionCollection {
     }
 
     private boolean isPointInQuadrantI(Point point) {
-        double x = point.getX();
-        double y = point.getY();
-        return x >= 0 && y >= 0;
+        return point.getX() >= 0 && point.getY() >= 0;
     }
 
     private boolean isPointInQuadrantII(Point point) {
-        double x = point.getX();
-        double y = point.getY();
-        return x < 0 && y >= 0;
+        return point.getX() < 0 && point.getY() >= 0;
     }
 
     private boolean isPointInQuadrantIII(Point point) {
-        double x = point.getX();
-        double y = point.getY();
-        return x <= 0 && y < 0;
+        return point.getX() <= 0 && point.getY() < 0;
     }
 
     /**
