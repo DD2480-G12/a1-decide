@@ -3,6 +3,8 @@ package com.group12;
 import com.group12.model.Point;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class LaunchInterceptorConditionCollection {
 
@@ -134,6 +136,49 @@ public class LaunchInterceptorConditionCollection {
             Point point2 = points.get(i + 1);
             Point point3 = points.get(i + 2);
             if (doubleCompare(areaOfTriangle(point1, point2, point3), area1) == 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * LIC #4 checks if there exists at least one set of <b>qPts</b> consecutive data points that lie in more than
+     * <b>quads</b> quadrants. Where there is ambiguity as to which quadrant contains a given point, priority of
+     * decision will be by quadrant number, i.e. I, II, III, IV. For example, the data point (0,0) is in quadrant I,
+     * the point (-1,0) is in quadrant II, the point (0,-1) is in quadrant III, the point (0,1) is in quadrant I and
+     * point (1,0) is in quadrant I.
+     *
+     * @param points list of radar echos ({@link Point})
+     * @param qPts   number of consecutive points. Has to be between 2 and points.size() (inclusive)
+     * @param quads  number of quadrants, <b>qPts</b> consecutive points has to cover more than this many quadrants
+     * @return true if <b>qPts</b> consecutive points cover more than <b>quads</b> quadrants, false otherwise.
+     * @throws IllegalArgumentException <ul>
+     *     <li>if <b>qPts</b> is less than 2 or greater than points.size()</li>
+     *     <li>if <b>quads</b> is less than 1 or greater than 3</li>
+     * </ul>
+     */
+    public boolean LIC4(List<Point> points, int qPts, int quads) throws IllegalArgumentException {
+        if (points == null) {
+            throw new IllegalArgumentException("Points list cannot be null");
+        }
+        if (qPts < 2 || qPts > points.size()) {
+            throw new IllegalArgumentException("qPts has to be between 2 and " + points.size() + " (inclusive)");
+        }
+        if (quads < 1 || quads > 3) {
+            throw new IllegalArgumentException("quads has to be between 1 and 3 (inclusive)");
+        }
+        for (int i = 0; i < points.size() - qPts + 1; i++) {
+            List<Point> consecutivePoints = points.subList(i, i + qPts);
+            Set<Integer> quadsThatAreCovered = consecutivePoints.stream()
+                    .map(point -> {
+                        if (isPointInQuadrantI(point)) return 1;
+                        if (isPointInQuadrantII(point)) return 2;
+                        if (isPointInQuadrantIII(point)) return 3;
+                        return 4;
+                    })
+                    .collect(Collectors.toSet());
+            if (quadsThatAreCovered.size() > quads) {
                 return true;
             }
         }
@@ -723,5 +768,23 @@ public class LaunchInterceptorConditionCollection {
             }
         }
         return false;
+    }
+
+    private boolean isPointInQuadrantI(Point point) {
+        double x = point.getX();
+        double y = point.getY();
+        return x >= 0 && y >= 0;
+    }
+
+    private boolean isPointInQuadrantII(Point point) {
+        double x = point.getX();
+        double y = point.getY();
+        return x < 0 && y >= 0;
+    }
+
+    private boolean isPointInQuadrantIII(Point point) {
+        double x = point.getX();
+        double y = point.getY();
+        return x <= 0 && y < 0;
     }
 }
