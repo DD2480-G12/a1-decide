@@ -1,10 +1,39 @@
 package com.group12;
 
 import com.group12.model.Connector;
+import com.group12.model.Point;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class LaunchInterceptorCore {
+
+    public boolean[] calculateCMV(Parameters parameters, List<Point> points){
+        if(points == null){
+            throw new IllegalArgumentException("points cannot be null");
+        }
+        if(points.size() < 2 || points.size() > 100){
+            throw new IllegalArgumentException("points must only contain between 2 and 100 elements (inclusive)");
+        }
+        boolean[] cmvValues = new boolean[15];
+        LaunchInterceptorConditionCollection licco = new LaunchInterceptorConditionCollection();
+        cmvValues[0] = licco.LIC0(points, parameters.length1);
+        cmvValues[1] = licco.LIC1(points, parameters.radius1);
+        cmvValues[2] = licco.LIC2(points, parameters.epsilon);
+        cmvValues[3] = licco.LIC3(points, parameters.area1);
+        cmvValues[4] = licco.LIC4(points, parameters.qPts, parameters.quads);
+        cmvValues[5] = licco.LIC5(points);
+        cmvValues[6] = licco.LIC6(points, parameters.nPts, parameters.dist);
+        cmvValues[7] = licco.LIC7(points, parameters.kPts, parameters.length1);
+        cmvValues[8] = licco.LIC8(points, parameters.aPts, parameters.bPts, parameters.radius1);
+        cmvValues[9] = licco.LIC9(points, parameters.cPts, parameters.dPts, parameters.epsilon);
+        cmvValues[10] = licco.LIC10(points, parameters.ePts, parameters.fPts, parameters.area1);
+        cmvValues[11] = licco.LIC11(points, parameters.gPts);
+        cmvValues[12] = licco.LIC12(points, parameters.kPts, parameters.length1, parameters.length2);
+        cmvValues[13] = licco.LIC13(points, parameters.aPts, parameters.bPts, parameters.radius1, parameters.radius2);
+        cmvValues[14] = licco.LIC14(points, parameters.ePts, parameters.fPts, parameters.area1, parameters.area2);
+        return cmvValues;
+    }
 
     /**
      * Calculates Preliminary Unlocking Matrix (PUM) by combining the Conditions Met Vector (CMV) and
