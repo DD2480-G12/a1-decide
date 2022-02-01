@@ -1,8 +1,12 @@
 package com.group12;
 
 import com.group12.model.Connector;
+import com.group12.model.Point;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -98,5 +102,33 @@ public class LaunchInterceptorCoreTest {
         boolean[][] pum = {{true, false}, {false, false}};
 
         assertThrows(IllegalArgumentException.class, () -> launchInterceptorCore.calculateFUV(pum, null));
+    }
+
+    //CMV tests
+
+    @Test
+    public void givenListOfNullPoints_whenCalculateCMV_thenThrowIllegalArgumentException(){
+        Parameters parameters = new Parameters();
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorCore.calculateCMV(parameters, null));
+    }
+
+    @Test
+    public void givenListOfOnePoints_whenCalculateCMV_thenThrowIllegalArgumentException(){
+        List<Point> points = List.of(new Point(0, 0));
+        Parameters parameters = new Parameters();
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorCore.calculateCMV(parameters, points));
+    }
+
+    @Test
+    public void givenListOf101Points_whenCalculateCMV_thenThrowIllegalArgumentException(){
+        List<Point> points = new ArrayList<>();
+        for(int i = 0; i < 101; i++){
+            points.add(new Point(0,0));
+        }
+        Parameters parameters = new Parameters();
+
+        assertThrows(IllegalArgumentException.class, () -> launchInterceptorCore.calculateCMV(parameters, points));
     }
 }
