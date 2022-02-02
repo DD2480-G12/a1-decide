@@ -55,8 +55,7 @@ public class LaunchInterceptorConditionCollection {
             throw new IllegalArgumentException("Points list cannot be null");
         }
         if (points.size() < 3) {
-            throw new IllegalArgumentException("There has to be at least three points, size of given points="
-                    + points.size());
+            return false;
         }
         if (doubleCompare(radius1, 0) < 0) {
             throw new IllegalArgumentException("Radius cannot be less than zero");
@@ -87,7 +86,7 @@ public class LaunchInterceptorConditionCollection {
             throw new IllegalArgumentException("Points list cannot be null");
         }
         if (points.size() < 3) {
-            throw new IllegalArgumentException("There has to be atleast three points");
+            return false;
         }
         if (doubleCompare(epsilon, 0) == -1 || doubleCompare(epsilon, PI) >= 0) {
             throw new IllegalArgumentException("Epsilon must hold these conditions: 0 <= Epsilon < Pi");
@@ -125,8 +124,7 @@ public class LaunchInterceptorConditionCollection {
             throw new IllegalArgumentException("Points list cannot be null");
         }
         if (points.size() < 3) {
-            throw new IllegalArgumentException("There has to be at least three points, size of given points="
-                    + points.size());
+            return false;
         }
         if (doubleCompare(area1, 0) < 0) {
             throw new IllegalArgumentException("Area cannot be less than zero");

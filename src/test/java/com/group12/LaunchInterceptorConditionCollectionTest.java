@@ -132,11 +132,13 @@ public class LaunchInterceptorConditionCollectionTest {
     }
 
     @Test
-    public void givenTwoPoint_whenLIC1_thenThrowIllegalArgumentException() {
+    public void givenTwoPoint_whenLIC1_thenFalse() {
         List<Point> points = List.of(new Point(2, 2), new Point(1, 1));
         double radius = 1;
 
-        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC1(points, radius));
+        boolean result = launchInterceptorConditionCollection.LIC1(points, radius);
+
+        assertFalse(result);
     }
 
     // Tests for LIC #2
@@ -170,11 +172,13 @@ public class LaunchInterceptorConditionCollectionTest {
     }
 
     @Test
-    public void givenInvalidAmountOfPointsAndValidDeviation_whenLIC2_thenThrowIllegalArgumentException(){
+    public void givenInvalidAmountOfPointsAndValidDeviation_whenLIC2_thenFalse(){
         List<Point> points = List.of(new Point(4, 0), new Point(0, 0));
         double epsilon = 2;
 
-        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC2(points,epsilon));
+        boolean result = launchInterceptorConditionCollection.LIC2(points, epsilon);
+
+        assertFalse(result);
     }
 
     @Test
@@ -260,11 +264,13 @@ public class LaunchInterceptorConditionCollectionTest {
     }
 
     @Test
-    public void givenTwoPoints_whenLIC3_thenThrowIllegalArgumentException() {
+    public void givenTwoPoints_whenLIC3_thenFalse() {
         List<Point> points = List.of(new Point(0, 0), new Point(0, 2));
         double area = 1;
 
-        assertThrows(IllegalArgumentException.class, () -> launchInterceptorConditionCollection.LIC3(points, area));
+        boolean result = launchInterceptorConditionCollection.LIC3(points, area);
+
+        assertFalse(result);
     }
 
     // Tests for LIC #4
